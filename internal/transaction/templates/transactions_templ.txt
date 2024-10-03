@@ -1,0 +1,6 @@
+<!-- Main content window --><div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col h-full overflow-y-auto\"><div class=\"w-full flex flex-row justify-between items-center gap-x-2 border-b border-slate-700/50 px-4 py-2\"><div id=\"transactions-tab-group\" class=\"text-xs font-semibold\" hx-target=\"#transactions-tab-list\" hx-swap=\"outerHTML\"><script>\n        // Tab selection changing\n        htmx.on(\"#transactions-tab-group\", \"htmx:beforeRequest\", function(event) {\n          let currentTab = document.querySelector('.tab-active');\n          currentTab.classList.remove('tab-active');\n          currentTab.classList.add('tab');\n          let newTab = event.target;\n          newTab.classList.remove('tab');\n          newTab.classList.add('tab-active');\n        })\n      </script>
+<button id=\"transactions-tab\" hx-get=\"/transactions/transactions-tab\" hx-push-url=\"/transactions\" class=\"
+\">Transactions</button> 
+<button id=\"rules-tab\" hx-get=\"/transactions/rules-tab\" hx-push-url=\"/transactions/rules\" class=\"
+\">Rules</button></div></div>
+</div>

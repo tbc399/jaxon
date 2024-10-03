@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -19,16 +18,10 @@ func Router() * http.ServeMux {
 func getTransactions(w http.ResponseWriter, r *http.Request) {
 
 	db := r.Context().Value("db").(*sqlx.DB)
-	userId := r.Context().Value("userId").(string)
+	userId := r.Context().Value("user")
+	transactions := models.FetchMany(userId, db)
 
-	transactions, err := models.FetchMany(userId, db)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	transactionsPartial := transactionTemplates.Transactions(transactions, "transactions")
+	transactionsPartial := transactionTemplates.Transactions(&transactions, "transactions")
 	templates.App("Transactions", "transactions", transactionsPartial).Render(r.Context(), w)
 
 }
