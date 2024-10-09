@@ -7,14 +7,22 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	"jaxon.app/jaxon/internal/auth/users"
 )
 
 type Transaction struct {
 	Id string
+	SourceHash sql.NullInt64 `db:"source_hash"`
 	UserId string `db:"user_id"`
+	User users.User
 	AccountId string`db:"account_id"`
-	StripeId string`db:"stripe_id"`
-	Completed bool
+	Description string
+	Amount int // transaction in cents
+	CategoryId sql.NullString `db:"category_id"`
+	CategoryName string `db:"category_name"`
+	Date time.Time
+	Notes sql.NullString
+	Hidden bool
 	CreatedAt time.Time`db:"created_at"`
 	UpdatedAt time.Time`db:"updated_at"`
 }

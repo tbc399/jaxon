@@ -15,12 +15,12 @@ import (
 // Prefixed with "login/"
 func Router() *http.ServeMux {
 	router := http.NewServeMux()
-	router.HandleFunc("GET /", getLoginPage)
-	router.HandleFunc("POST /", submitLogin)
-	router.HandleFunc("GET /otp/{otp_id}", getOneTimePass)
-	router.HandleFunc("GET /otp/{otp_id}/check", checkLoginStatus)
-	router.HandleFunc("GET /magic/{magic_token}", getOtpValidationPage)
-	router.HandleFunc("POST /magic/{magic_token}", submitOtpValidation)
+	router.HandleFunc("GET /login", getLoginPage)
+	router.HandleFunc("POST /login", submitLogin)
+	router.HandleFunc("GET /login/otp/{otp_id}", getOneTimePass)
+	router.HandleFunc("GET /login/otp/{otp_id}/check", checkLoginStatus)
+	router.HandleFunc("GET /login/magic/{magic_token}", getOtpValidationPage)
+	router.HandleFunc("POST /login/magic/{magic_token}", submitOtpValidation)
 	return router
 }
 
@@ -42,7 +42,7 @@ func submitLogin(response http.ResponseWriter, request *http.Request) {
 
 	go otp.SendEmail(email, otpass, db)
 
-	http.Redirect(response, request, fmt.Sprintf("/login/otp/%s", otpass.Id), 303)
+	http.Redirect(response, request, fmt.Sprintf("/auth/login/otp/%s", otpass.Id), 303)
 }
 
 func getOneTimePass(w http.ResponseWriter, r *http.Request) {

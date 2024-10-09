@@ -11,9 +11,10 @@ import (
 	_ "github.com/lib/pq"
 
 	"jaxon.app/jaxon/internal/auth"
-	budgets "jaxon.app/jaxon/internal/budget/routes"
+	//budgets "jaxon.app/jaxon/internal/budget/routes"
 	dashboard "jaxon.app/jaxon/internal/dashboard/routes"
 	"jaxon.app/jaxon/internal/middleware"
+	transactions "jaxon.app/jaxon/internal/transaction/routes"
 )
 
 func main() {
@@ -29,28 +30,39 @@ func main() {
 
 	var router = http.NewServeMux()
 
+	// static files
 	var staticServer = http.FileServer(http.Dir("web/"))
 	router.Handle("/static/", http.StripPrefix("/static", staticServer))
 	var scriptServer = http.FileServer(http.Dir("node_modules/"))
 	router.Handle("/modules/", http.StripPrefix("/modules", scriptServer))
 
-	chain := middleware.Chain(middleware.Logging)
+	middlewares := middleware.Chain(middleware.LogRequest)
 
-	// Auth routes
 	authRouter := auth.Router()
-	budgetRouter := budgets.Router()
-	dashboardRouter := dashboard.Router()
+	//budgetRouter := middleware.EnsureAuth(budgets.Router())
+	//dashboardRouter := middleware.EnsureAuth(dashboard.Router())
+	//transactionRouter := middleware.EnsureAuth(transactions.Router())
 
-	router.Handle("/dashboard/", http.StripPrefix("/dashboard", dashboardRouter))
-	router.Handle("/login/", http.StripPrefix("/login", authRouter))
-	router.Handle("/budgets/", http.StripPrefix("/budgets", budgetRouter))
+	appRouter := http.NewServeMux()
+
+	//auth.AddRoutes(router)
+	//budgets.AddRoutes(router)
+	dashboard.AddRoutes(appRouter)
+	transactions.AddRoutes(appRouter)
+
+	// Auth protected routes
+	router.Handle("/auth/", http.StripPrefix("/auth", authRouter))
+	router.Handle("/", middleware.EnsureAuth(appRouter))
+	//router.Handle("/dashboard/", http.StripPrefix("", dashboardRouter))
+	//router.Handle("/budgets/", http.StripPrefix("", budgetRouter))
+	//router.Handle("/transactions/", http.StripPrefix("", transactionRouter))
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	var server = http.Server{
 		Addr:    ":8080",
-		Handler: chain(router),
+		Handler: middlewares(router),
 		BaseContext: func(listner net.Listener) context.Context {
 			return context.WithValue(ctx, "db", db)
 		},

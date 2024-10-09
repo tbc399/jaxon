@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"log/slog"
+	//"log/slog"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -10,10 +10,8 @@ import (
 	transactionTemplates "jaxon.app/jaxon/internal/transaction/templates"
 )
 
-func Router() * http.ServeMux {
-	router := http.NewServeMux()
+func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /", getTransactions)
-	return router
 }
 
 func getTransactions(w http.ResponseWriter, r *http.Request) {

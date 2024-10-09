@@ -32,8 +32,8 @@ func transactionsPartial(transactions *[]models.Transaction) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, transaction := range transactions {
-			templ_7745c5c3_Err = transactionListItem(transaction).Render(ctx, templ_7745c5c3_Buffer)
+		for _, transaction := range *transactions {
+			templ_7745c5c3_Err = transactionListItem(&transaction).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -40,7 +40,7 @@ templ LoginPending(otpass *otp.OneTimePass) {
             </div>
           </div>
         </main>
-        <div hx-get={ string(templ.URL(fmt.Sprintf("/login/otp/%s/check", otpass.Id))) } hx-trigger="every 2s" class="hidden"></div>
+        <div hx-get={ string(templ.URL(fmt.Sprintf("/auth/login/otp/%s/check", otpass.Id))) } hx-trigger="every 2s" class="hidden"></div>
       </body>
     </html>
 }

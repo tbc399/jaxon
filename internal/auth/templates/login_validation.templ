@@ -27,7 +27,7 @@ templ LoginValidation(otpass *otp.OneTimePass) {
                     <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>
                   </svg>
                 </div>
-                <form action={ templ.URL(fmt.Sprintf("/login/magic/%s", otpass.MagicToken)) } method="POST">
+                <form action={ templ.URL(fmt.Sprintf("/auth/login/magic/%s", otpass.MagicToken)) } method="POST">
                   <div class="flex space-x-3 justify-center" data-hs-pin-input="">
                     <input name="digit_1" type="text" class="block w-[48px] text-center border-gray-200 rounded-md text-2xl focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" data-hs-pin-input-item="" autofocus="">
                     <input name="digit_2" type="text" class="block w-[48px] text-center border-gray-200 rounded-md text-2xl focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" data-hs-pin-input-item="">

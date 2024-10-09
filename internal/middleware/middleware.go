@@ -1,9 +1,14 @@
 package middleware
 
 import (
-	"log"
+	"context"
+	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+	//"github.com/lithammer/shortuuid/v4"
+	"jaxon.app/jaxon/internal/auth/sessions"
 )
 
 type Middleware func(http.Handler) http.Handler
@@ -28,14 +33,57 @@ func (writer *WrappedWritter) WriteHeader(statusCode int) {
 	writer.statusCode = statusCode
 }
 
-func Logging(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+func LogRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		wrapped := &WrappedWritter{
-			ResponseWriter: writer,
+			ResponseWriter: w,
 			statusCode:     http.StatusOK,
 		}
-		next.ServeHTTP(wrapped, request)
-		log.Println("INFO", wrapped.statusCode, request.Method, request.URL.Path, time.Since(start))
+		//reqId := shortuuid.New()
+		next.ServeHTTP(wrapped, r)
+		slog.Info(r.URL.Path, 
+			"method", r.Method, 
+			"status", wrapped.statusCode, 
+			"time", time.Since(start))
+	})
+}
+
+func EnsureAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// before
+		cookie, err := r.Cookie("trbl_session")
+		if err != nil {
+			// user is not authenticated, need to redirect
+			// have to handle regular redirect and hx redirect
+			slog.Warn("No session cookie found")
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		db := r.Context().Value("db").(*sqlx.DB)
+		session, err := sessions.Fetch(cookie.Value, db)
+
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		if session == nil {
+			slog.Warn("No session found for given cookie. Suspicious", "cookie", cookie.Value)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		if session.IsExpired() {
+			slog.Info("Session is expired", "session", session)
+			w.WriteHeader(http.StatusUnauthorized)
+		}
+
+		ctx := context.WithValue(r.Context(), "userId", session.UserId)
+		req := r.WithContext(ctx)
+
+		next.ServeHTTP(w, req)
+
 	})
 }

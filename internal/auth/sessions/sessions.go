@@ -21,6 +21,10 @@ type Session struct {
 	UpdatedAt     time.Time `db:"updated_at"`
 }
 
+func (self *Session) IsExpired() bool {
+	return self.Expiry.Before(time.Now().UTC())
+}
+
 func New(userId string, otpId string) *Session {
 	now := time.Now().UTC()
 	return &Session{
@@ -50,6 +54,17 @@ func (session *Session) Save(db *sqlx.DB) (*Session, error) {
 		return nil, err
 	}
 	return session, nil
+}
+
+func Fetch(id string, db *sqlx.DB) (*Session, error) {
+	sqls := "SELECT * FROM sessions WHERE id = $1"
+	session := Session{}
+	err := db.Get(&session, sqls, id)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, err
+	}
+	return &session, nil
 }
 
 func FetchByOtpId(otpId string, db *sqlx.DB) (*Session, error) {

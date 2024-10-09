@@ -83,7 +83,7 @@ func Transactions(transactions *[]models.Transaction, activeTab string) templ.Co
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = transactionPartial(transactions).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = transactionsPartial(transactions).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

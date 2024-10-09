@@ -7,10 +7,9 @@ import (
 	"jaxon.app/jaxon/internal/templates"
 )
 
-func Router() *http.ServeMux {
-	router := http.NewServeMux()
-	router.HandleFunc("GET /", getDashboard)
-	return router
+func AddRoutes(router *http.ServeMux) {
+	router.HandleFunc("GET /dashboard", getDashboard)
+	router.HandleFunc("GET /dashboard/", getDashboard)
 }
 
 func getDashboard(w http.ResponseWriter, r *http.Request) {
