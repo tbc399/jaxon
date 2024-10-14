@@ -25,5 +25,5 @@ func getBudgets(w http.ResponseWriter, r *http.Request) {
 	budgets := []budget.Budget{}
 
 	budgetPartial := budgetTemplates.Budgets(&budgets, "budgets")
-	templates.App("Budgets", "budgets", budgetPartial).Render(r.Context(), w)
+	templates.App("Budgets", "budgets", budgetPartial, "your@email.com").Render(r.Context(), w)
 }

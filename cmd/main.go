@@ -12,6 +12,7 @@ import (
 
 	"jaxon.app/jaxon/internal/auth"
 	//budgets "jaxon.app/jaxon/internal/budget/routes"
+	accounts "jaxon.app/jaxon/internal/account/routes"
 	dashboard "jaxon.app/jaxon/internal/dashboard/routes"
 	"jaxon.app/jaxon/internal/middleware"
 	transactions "jaxon.app/jaxon/internal/transaction/routes"
@@ -49,6 +50,7 @@ func main() {
 	//budgets.AddRoutes(router)
 	dashboard.AddRoutes(appRouter)
 	transactions.AddRoutes(appRouter)
+	accounts.AddRoutes(appRouter)
 
 	// Auth protected routes
 	router.Handle("/auth/", http.StripPrefix("/auth", authRouter))

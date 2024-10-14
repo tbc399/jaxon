@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 .tab {
-  @apply text-gray-600 hover:text-gray-500
+  @apply text-sm font-normal text-gray-400 hover:text-gray-200 h-full px-2.5 py-4
 }
 
 .tab-active {
-  @apply text-teal-500 
+  @apply text-sm font-medium text-gray-100 border-b-[3px] border-teal-600 px-2.5 py-4 h-full
 }
 
 .menu-item {
-  @apply text-base-content
+  @apply text-gray-100 hover:bg-slate-800
 }
 
 .menu-item-selected {
-  @apply text-base-content
+  @apply text-gray-100 bg-slate-800
 }
 

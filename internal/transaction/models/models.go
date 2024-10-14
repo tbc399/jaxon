@@ -11,20 +11,20 @@ import (
 )
 
 type Transaction struct {
-	Id string
-	SourceHash sql.NullInt64 `db:"source_hash"`
-	UserId string `db:"user_id"`
-	User users.User
-	AccountId string`db:"account_id"`
-	Description string
-	Amount int // transaction in cents
-	CategoryId sql.NullString `db:"category_id"`
-	CategoryName string `db:"category_name"`
-	Date time.Time
-	Notes sql.NullString
-	Hidden bool
-	CreatedAt time.Time`db:"created_at"`
-	UpdatedAt time.Time`db:"updated_at"`
+	Id           string
+	SourceHash   sql.NullInt64 `db:"source_hash"`
+	UserId       string        `db:"user_id"`
+	User         users.User
+	AccountId    string `db:"account_id"`
+	Description  string
+	Amount       int            // transaction in cents
+	CategoryId   sql.NullString `db:"category_id"`
+	CategoryName string         `db:"category_name"`
+	Date         time.Time
+	Notes        sql.NullString
+	Hidden       bool
+	CreatedAt    time.Time `db:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at"`
 }
 
 func FetchMany(userId string, db *sqlx.DB) (*[]Transaction, error) {

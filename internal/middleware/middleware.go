@@ -42,9 +42,9 @@ func LogRequest(next http.Handler) http.Handler {
 		}
 		//reqId := shortuuid.New()
 		next.ServeHTTP(wrapped, r)
-		slog.Info(r.URL.Path, 
-			"method", r.Method, 
-			"status", wrapped.statusCode, 
+		slog.Info(r.URL.Path,
+			"method", r.Method,
+			"status", wrapped.statusCode,
 			"time", time.Since(start))
 	})
 }

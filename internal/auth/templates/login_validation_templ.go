@@ -8,9 +8,11 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "jaxon.app/jaxon/internal/auth/otp"
-import "fmt"
-import "jaxon.app/jaxon/internal/templates"
+import (
+	"fmt"
+	"jaxon.app/jaxon/internal/auth/otp"
+	"jaxon.app/jaxon/internal/templates"
+)
 
 func LoginValidation(otpass *otp.OneTimePass) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

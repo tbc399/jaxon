@@ -1,51 +1,57 @@
 package templates
 
-import "jaxon.app/jaxon/internal/transaction/models"
-import "fmt"
+import (
+	"fmt"
+	"jaxon.app/jaxon/internal/transaction/models"
+)
 
 func styleAmount(amount int) string {
-    style := "table-cell px-6 py-2.5 whitespace-nowrap text-sm font-semibold"
-    if amount > 0 {
-      return style + " dark:text-emerald-500"
-    }
-    return style + " dark:text-slate-500"
+	style := "table-cell px-6 py-2.5 whitespace-nowrap"
+	if amount > 0 {
+		return style + " dark:text-emerald-500"
+	}
+	return style + " dark:text-slate-500"
 }
 
 templ transactionListItem(transaction *models.Transaction) {
-<div hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
-    hx-swap="none" id={ fmt.Sprintf("tran_%s", transaction.Id) }
-    class="table-row dark:hover:bg-slate-900/20 dark:active:bg-slate-800/20">
-  <div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm font-semibold text-slate-800 dark:text-slate-500">
-    { transaction.Date.Format("%b %d, %Y") }
-  </div>
-  <div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm font-medium text-slate-800 dark:text-slate-300">
-    { transaction.Description }
-  </div>
-  <div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm font-semibold text-slate-800 dark:text-slate-300">
-    if transaction.CategoryName != "" {
-      transaction.CategoryName
-    } else {
-      Uncategorized
-    }
-  </div>
-  <div class={ styleAmount(transaction.Amount) }>
-    <span class="w-full flex justify-end">
-      if transaction.Amount > 0 {
-        +{ fmt.Sprintf("%0.2f", float32(transaction.Amount / 100)) }
-      } else {
-        { fmt.Sprintf("%0.2f", float32(transaction.Amount / 100)) }
-      }
-    </span>
-  </div>
-  <div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm text-slate-800 dark:text-slate-300">
-  </div>
-  <div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm font-bold text-teal-700 dark:text-teal-700">
-    <button hx-target={ fmt.Sprintf("#tran_%s", transaction.Id) } 
-        hx-swap="beforeend" 
-        hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
-        class="dark:hover:text-teal-800">
-      Edit
-    </button>
-  </div>
-</div>
+	<div
+		hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
+		hx-swap="none"
+		id={ fmt.Sprintf("tran_%s", transaction.Id) }
+		class="table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20"
+	>
+		<div class="table-cell px-6 py-2.5 whitespace-nowrap font-medium text-gray-400">
+			{ transaction.Date.Format("Jan 02, 2006") }
+		</div>
+		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-gray-200">
+			{ transaction.Description }
+		</div>
+		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-gray-200">
+			if transaction.CategoryName != "" {
+				transaction.CategoryName
+			} else {
+				Uncategorized
+			}
+		</div>
+		<div class={ styleAmount(transaction.Amount) }>
+			<span class="w-full flex justify-end">
+				if transaction.Amount > 0 {
+					+{ fmt.Sprintf("%0.2f", float32(transaction.Amount / 100)) }
+				} else {
+					{ fmt.Sprintf("%0.2f", float32(transaction.Amount / 100)) }
+				}
+			</span>
+		</div>
+		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm text-slate-800 dark:text-slate-300"></div>
+		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-sm font-bold text-teal-700 dark:text-teal-700">
+			<button
+				hx-target={ fmt.Sprintf("#tran_%s", transaction.Id) }
+				hx-swap="beforeend"
+				hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
+				class="dark:hover:text-teal-800"
+			>
+				Edit
+			</button>
+		</div>
+	</div>
 }

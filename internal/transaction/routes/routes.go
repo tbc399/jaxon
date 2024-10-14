@@ -11,7 +11,8 @@ import (
 )
 
 func AddRoutes(router *http.ServeMux) {
-	router.HandleFunc("GET /", getTransactions)
+	router.HandleFunc("GET /transactions", getTransactions)
+	router.HandleFunc("GET /transactions/partial", getTransactionsPartial)
 }
 
 func getTransactions(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,22 @@ func getTransactions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transactionsPartial := transactionTemplates.Transactions(transactions, "transactions")
-	templates.App("Transactions", "transactions", transactionsPartial).Render(r.Context(), w)
+	templates.App("Transactions", "transactions", transactionsPartial, "your@email.com").Render(r.Context(), w)
+
+}
+
+func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
+
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	transactions, err := models.FetchMany(userId, db)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	transactionTemplates.Transactions(transactions, "transactions").Render(r.Context(), w)
 
 }
