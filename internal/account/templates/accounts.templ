@@ -11,22 +11,9 @@ func tabStyling(activeTab string, expected string) string {
 // Full page reload for accounts menu selection
 templ Accounts(accountsTabSection templ.Component, activeTab string) {
 	<div hx-swap-oob="outerHTML:#main-content" id="main-content" class="flex flex-col h-full items-center overflow-y-auto">
-		<div class="max-w-[1000px] min-w-[1000px] pt-16">
+		<div class="w-[1000px] pt-16">
 			<div class="flex justify-between mb-7">
 				<h1 class="font-semibold text-3xl text-slate-200">Connections</h1>
-				<button
-					id="add-account-button"
-					type="button"
-					title="Connect new account"
-					class="py-0 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md
-                      text-gray-100 bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
-                      disabled:pointer-events-none"
-				>
-					<svg viewBox="0 0 24 24" class="size-3 fill-none stroke-2 stroke-slate-100">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-					</svg>
-					Add
-				</button>
 			</div>
 			<div class="w-full flex flex-row justify-between items-center gap-x-2 border-b border-gray-800">
 				<div id="accounts-tab-group" hx-target="#accounts-tab-list" hx-swap="outerHTML" class="flex h-full">
@@ -71,6 +58,7 @@ templ Accounts(accountsTabSection templ.Component, activeTab string) {
 					</svg>
 					Add account
 				</button>
+				/*
 				<script>
                   htmx.on("#add-account-button", "click",
                     async function(evt) {
@@ -99,6 +87,7 @@ templ Accounts(accountsTabSection templ.Component, activeTab string) {
                     }
                   );
                 </script>
+                */
 			</div>
 			@accountsTabSection
 		</div>

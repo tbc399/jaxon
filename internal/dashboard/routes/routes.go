@@ -14,5 +14,5 @@ func AddRoutes(router *http.ServeMux) {
 
 func getDashboard(w http.ResponseWriter, r *http.Request) {
 	dashboard := dashTemplates.Dashboard()
-	templates.App("Dashboard", "dashboard", dashboard, "your@email.com").Render(r.Context(), w)
+	templates.App("Dashboard", "dashboard", dashboard).Render(r.Context(), w)
 }

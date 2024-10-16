@@ -1,0 +1,66 @@
+package templates
+
+import (
+	"fmt"
+	"strings"
+)
+
+//import "jaxon.app/jaxon/internal/profile/models"
+
+// tab styling for accounts tab
+func tabStyling(activeTab string, expected string) string {
+	if activeTab == expected {
+		return "tab-active"
+	}
+	return "tab"
+}
+
+type TabTempl struct {
+	Name   string
+	HxGet  string
+	HxPush string
+}
+
+templ TabGroup(activeTab string, tabs ...TabTempl) {
+	<div id="accounts-tab-group" hx-target="#accounts-tab-list" hx-swap="outerHTML" class="flex h-full">
+		<script>
+            // Tab selection changing
+            htmx.on("#accounts-tab-group", "htmx:beforeRequest", function(event) {
+              let currentTab = document.querySelector('.tab-active');
+              currentTab.classList.remove('tab-active');
+              currentTab.classList.add('tab');
+              let newTab = event.target;
+              newTab.classList.remove('tab');
+              newTab.classList.add('tab-active');
+            })
+        </script>
+		for _, tab := range tabs {
+			<button
+				id={ fmt.Sprint("%s-tab", strings.ToLower(tab.Name)) }
+				hx-get={ string(templ.URL(tab.HxGet)) }
+				hx-push-url={ string(templ.URL(tab.HxPush)) }
+				class={ tabStyling(activeTab, strings.ToLower(tab.Name)) }
+			>
+				{ tab.Name }
+			</button>
+		}
+	</div>
+}
+
+templ Profile(settingsSelection templ.Component, activeTab string) {
+	<div hx-swap-oob="outerHTML:#main-content" id="main-content" class="flex flex-col h-full items-center overflow-y-auto">
+		<div class="w-[1000px] pt-16">
+			<div class="flex justify-between mb-7">
+				<h1 class="font-semibold text-3xl text-slate-200">Account Settings</h1>
+			</div>
+			<div class="w-full flex flex-row justify-between items-center gap-x-2 border-b border-gray-800">
+				@TabGroup(
+					activeTab,
+					TabTempl{"Profile", "/settings/profile", "/settings/profile"},
+					TabTempl{"Billing", "/settings/billing", "settings/billing"},
+				)
+			</div>
+			@settingsSelection
+		</div>
+	</div>
+}

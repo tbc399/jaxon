@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/jmoiron/sqlx"
 	accountModels "jaxon.app/jaxon/internal/account/models/accounts"
@@ -49,20 +50,21 @@ func getAccountsFullPage(w http.ResponseWriter, r *http.Request) {
 
 	accounts, err := accountModels.FetchAll(userId, db)
 
-	acctMap := groupAccounts(accounts)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	accountsTab := accountsTemplates.AccountsTab(acctMap)
+	acctMap := groupAccounts(accounts)
+
+	stripePubKey := os.Getenv("STRIPE_PUB_KEY")
+
+	accountsTab := accountsTemplates.AccountsTab(acctMap, stripePubKey)
 	accountsPartial := accountsTemplates.Accounts(accountsTab, "accounts")
 	templates.App(
 		"Accounts",
 		"accounts",
 		accountsPartial,
-		"your@email.com",
 	).Render(r.Context(), w)
 
 }
@@ -85,7 +87,6 @@ func getAssetsFullPage(w http.ResponseWriter, r *http.Request) {
 		"Assets",
 		"accounts",
 		assetsPartial,
-		"your@email.com",
 	).Render(r.Context(), w)
 
 }
@@ -104,7 +105,8 @@ func getAccountsPartialPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accountsTab := accountsTemplates.AccountsTab(acctMap)
+	stripePubKey := os.Getenv("STRIPE_PUB_KEY")
+	accountsTab := accountsTemplates.AccountsTab(acctMap, stripePubKey)
 	accountsTemplates.Accounts(accountsTab, "accounts").Render(r.Context(), w)
 
 }
@@ -123,7 +125,9 @@ func getAccountsTab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accountsTemplates.AccountsTab(acctMap).Render(r.Context(), w)
+	stripePubKey := os.Getenv("STRIPE_PUB_KEY")
+
+	accountsTemplates.AccountsTab(acctMap, stripePubKey).Render(r.Context(), w)
 
 }
 

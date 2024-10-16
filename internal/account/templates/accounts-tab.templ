@@ -2,19 +2,63 @@ package templates
 
 import accountModels "jaxon.app/jaxon/internal/account/models/accounts"
 
-templ AccountsTab(accounts map[string][]accountModels.Account) {
+templ AccountsTab(accounts map[string][]accountModels.Account, stripePubKey string) {
 	<!-- List of accounts -->
 	<div
 		id="accounts-tab-list"
-		class="pt-8 pb-2 items-center gap-y-3 gap-x-3 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-800"
+		class="pt-6 pb-2 items-center gap-y-3 gap-x-3 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-800"
 		hx-get="/accounts/accounts-tab"
 		hx-trigger="accountsLinked"
 		hx-swap="outerHTML"
 	>
+		<div class="flex justify-end mb-4 pe-2">
+			<button
+				id="add-account-button"
+				type="button"
+				title="Connect new account"
+				class="py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md
+                      text-gray-100 bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
+                      disabled:pointer-events-none"
+			>
+				<svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-[2.5px] stroke-gray-100">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+				</svg>
+				Add account
+			</button>
+			<script>
+              htmx.on("#add-account-button", "click",
+                async function(evt) {
+                  fetch("/accounts/connect")
+                    .then(async function(response) {
+                      return response.json();
+                    }).then(async function(json) {
+                      const key = 
+                      const stripe = new Stripe("{ stripePubKey }");
+                      const sessionResult = await stripe.collectFinancialConnectionsAccounts({
+                        clientSecret: json["client_secret"]
+                      }).then(async function(result) {
+                        if (result.error) {
+                          // Inform the customer that there was an error.
+                          console.log(result.error.message);
+                        // Handle next step based on length of accounts array
+                        } else if (result.financialConnectionsSession.accounts.length === 0) {
+                          console.log('No accounts were linked');
+                        } else {
+                          //console.log(result.financialConnectionsSession.accounts)
+                          event = new CustomEvent("accountsLinked")
+                          e = document.getElementById("accounts-tab-list")
+                          e.dispatchEvent(event)
+                        }
+                      });
+                    });
+                }
+              );
+            </script>
+		</div>
 		if len(accounts) > 0 {
 			for acctType, accountList := range accounts {
 				<div>
-					<h2 class="flex justify-start text-gray-400 font-semibold mb-4">{ acctType }</h2>
+					<h2 class="flex justify-start text-gray-200 font-semibold mb-4">{ acctType }</h2>
 				</div>
 				<div class="grid grid-cols-2 gap-4">
 					for _, account := range accountList {

@@ -1085,6 +1085,13 @@ html {
   background-color: var(--fallback-bc,oklch(var(--bc)/0.1));
 }
 
+.drawer {
+  position: relative;
+  display: grid;
+  grid-auto-columns: max-content auto;
+  width: 100%;
+}
+
 .drawer-side > .drawer-overlay {
   position: sticky;
   top: 0px;
@@ -2981,11 +2988,6 @@ details.collapse summary::-webkit-details-marker {
   margin-bottom: 0.75rem;
 }
 
-.my-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -3032,10 +3034,6 @@ details.collapse summary::-webkit-details-marker {
 
 .mt-7 {
   margin-top: 1.75rem;
-}
-
-.mt-5 {
-  margin-top: 1.25rem;
 }
 
 .block {
@@ -3116,16 +3114,16 @@ details.collapse summary::-webkit-details-marker {
   height: 0.5rem;
 }
 
+.h-\[1px\] {
+  height: 1px;
+}
+
 .h-full {
   height: 100%;
 }
 
 .h-screen {
   height: 100vh;
-}
-
-.h-\[2px\] {
-  height: 2px;
 }
 
 .max-h-screen {
@@ -3156,6 +3154,10 @@ details.collapse summary::-webkit-details-marker {
   width: 18rem;
 }
 
+.w-\[1000px\] {
+  width: 1000px;
+}
+
 .w-\[48px\] {
   width: 48px;
 }
@@ -3172,18 +3174,6 @@ details.collapse summary::-webkit-details-marker {
   min-width: 9rem;
 }
 
-.min-w-\[1040px\] {
-  min-width: 1040px;
-}
-
-.min-w-\[1000px\] {
-  min-width: 1000px;
-}
-
-.max-w-\[1040px\] {
-  max-width: 1040px;
-}
-
 .max-w-\[300px\] {
   max-width: 300px;
 }
@@ -3194,10 +3184,6 @@ details.collapse summary::-webkit-details-marker {
 
 .max-w-md {
   max-width: 28rem;
-}
-
-.max-w-\[1000px\] {
-  max-width: 1000px;
 }
 
 .flex-shrink-0 {
@@ -3461,6 +3447,11 @@ details.collapse summary::-webkit-details-marker {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
+.bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+
 .bg-gray-800\/25 {
   background-color: rgb(31 41 55 / 0.25);
 }
@@ -3497,15 +3488,6 @@ details.collapse summary::-webkit-details-marker {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-gray-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-}
-
-.bg-gray-800\/50 {
-  background-color: rgb(31 41 55 / 0.5);
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -3528,6 +3510,10 @@ details.collapse summary::-webkit-details-marker {
   fill: none;
 }
 
+.stroke-gray-100 {
+  stroke: #f3f4f6;
+}
+
 .stroke-gray-500 {
   stroke: #6b7280;
 }
@@ -3544,12 +3530,20 @@ details.collapse summary::-webkit-details-marker {
   stroke-width: 2;
 }
 
-.stroke-\[1\.5\] {
-  stroke-width: 1.5;
+.stroke-\[1\.5px\] {
+  stroke-width: 1.5px;
 }
 
 .stroke-\[2\.5\] {
   stroke-width: 2.5;
+}
+
+.stroke-\[2\.5px\] {
+  stroke-width: 2.5px;
+}
+
+.stroke-\[2px\] {
+  stroke-width: 2px;
 }
 
 .p-1 {
@@ -3646,22 +3640,16 @@ details.collapse summary::-webkit-details-marker {
   padding-bottom: 1rem;
 }
 
-.py-0\.5 {
-  padding-top: 0.125rem;
-  padding-bottom: 0.125rem;
-}
-
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
 .pb-2 {
   padding-bottom: 0.5rem;
 }
 
-.pb-6 {
-  padding-bottom: 1.5rem;
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
+.pe-2 {
+  padding-inline-end: 0.5rem;
 }
 
 .pe-3 {
@@ -3674,6 +3662,10 @@ details.collapse summary::-webkit-details-marker {
 
 .ps-2 {
   padding-inline-start: 0.5rem;
+}
+
+.ps-2\.5 {
+  padding-inline-start: 0.625rem;
 }
 
 .ps-3 {
@@ -3690,14 +3682,6 @@ details.collapse summary::-webkit-details-marker {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
-}
-
-.ps-2\.5 {
-  padding-inline-start: 0.625rem;
 }
 
 .text-center {
@@ -3776,6 +3760,10 @@ details.collapse summary::-webkit-details-marker {
 
 .lowercase {
   text-transform: lowercase;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .leading-7 {
@@ -3900,6 +3888,10 @@ details.collapse summary::-webkit-details-marker {
   text-decoration-thickness: 2px;
 }
 
+.underline-offset-auto {
+  text-underline-offset: auto;
+}
+
 .opacity-0 {
   opacity: 0;
 }
@@ -3956,13 +3948,13 @@ details.collapse summary::-webkit-details-marker {
 
 .tab {
   height: 100%;
-  padding-left: 0.625rem;
-  padding-right: 0.625rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  font-weight: 400;
+  font-weight: 500;
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
@@ -3977,8 +3969,8 @@ details.collapse summary::-webkit-details-marker {
   border-bottom-width: 3px;
   --tw-border-opacity: 1;
   border-color: rgb(13 148 136 / var(--tw-border-opacity));
-  padding-left: 0.625rem;
-  padding-right: 0.625rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-size: 0.875rem;

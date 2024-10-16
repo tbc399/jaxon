@@ -12,8 +12,6 @@ import (
 
 type User struct {
 	Id               string
-	First            sql.NullString
-	Last             sql.NullString
 	Email            string
 	StripeCustomerId sql.NullString `db:"stripe_customer_id"`
 	CreatedAt        time.Time      `db:"created_at"`

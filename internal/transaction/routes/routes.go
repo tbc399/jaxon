@@ -28,7 +28,7 @@ func getTransactions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transactionsPartial := transactionTemplates.Transactions(transactions, "transactions")
-	templates.App("Transactions", "transactions", transactionsPartial, "your@email.com").Render(r.Context(), w)
+	templates.App("Transactions", "transactions", transactionsPartial).Render(r.Context(), w)
 
 }
 
