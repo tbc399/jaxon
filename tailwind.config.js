@@ -25,6 +25,8 @@ module.exports = {
     darkTheme: "sunset",
     themes: [
         "sunset",
+        "forest",
+        "night",
     ]
   }
 }

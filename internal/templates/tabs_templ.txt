@@ -1,0 +1,8 @@
+<div id=\"accounts-tab-group\" hx-target=\"#accounts-tab-list\" hx-swap=\"outerHTML\" class=\"flex rounded-lg bg-base-200 p-1\"><script>\n            // Tab selection changing\n            htmx.on(\"#accounts-tab-group\", \"htmx:beforeRequest\", function(event) {\n              let currentTab = document.querySelector('.tab-active');\n              currentTab.classList.remove('tab-active');\n              currentTab.classList.add('tab');\n              let newTab = event.target;\n              newTab.classList.remove('tab');\n              newTab.classList.add('tab-active');\n            })\n        </script>
+<button id=\"
+\" hx-get=\"
+\" hx-push-url=\"
+\" class=\"
+\">
+</button>
+</div>

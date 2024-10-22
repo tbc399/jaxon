@@ -58,11 +58,11 @@ templ AccountsTab(accounts map[string][]accountModels.Account, stripePubKey stri
 		if len(accounts) > 0 {
 			for acctType, accountList := range accounts {
 				<div>
-					<h2 class="flex justify-start text-gray-200 font-semibold mb-4">{ acctType }</h2>
+					<h2 class="flex justify-start text-zinc-300 font-semibold mb-4">{ acctType }</h2>
 				</div>
 				<div class="grid grid-cols-2 gap-4">
 					for _, account := range accountList {
-						<div class="flex flex-col rounded-lg w-full border border-gray-700/40 shadow-sm shadow-gray-950 bg-gray-800/25 text-gray-300 p-4">
+						<div class="flex flex-col rounded-lg w-full border border-zinc-800/40 shadow-sm shadow-zinc-950 bg-neutral/50 text-zinc-300 p-4">
 							<div class="flex flex-row justify-between mb-4">
 								<div class="flex flex-row gap-x-2 items-center">
 									<div class="text-sm font-semibold">{ account.Name }</div>

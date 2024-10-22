@@ -29,7 +29,7 @@ func New(email string) *User {
 }
 
 func (user *User) Save(db *sqlx.DB) (*User, error) {
-	sqls := `INSERT INTO users (id, first, last, email, stripe_customer_id, created_at, updated_at) VALUES (:id, :first, :last, :email, :stripe_customer_id, :created_at, :updated_at)`
+	sqls := `INSERT INTO users (id, email, stripe_customer_id, created_at, updated_at) VALUES (:id, :email, :stripe_customer_id, :created_at, :updated_at)`
 	slog.Info("Executing sql", "sql", sqls)
 	tx := db.MustBegin()
 	_, err := tx.NamedExec(sqls, user)

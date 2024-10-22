@@ -77,7 +77,14 @@ func EnsureAuth(next http.Handler) http.Handler {
 
 		if session.IsExpired() {
 			slog.Info("Session is expired", "session", session)
-			w.WriteHeader(http.StatusUnauthorized)
+			_, ok := r.Header["HX-Redirect"]
+			if ok {
+				w.Header().Add("HX-Redirect", "/auth/login")
+				w.WriteHeader(http.StatusOK)
+			} else {
+				http.Redirect(w, r, "/auth/login", http.StatusSeeOther)
+			}
+			return
 		}
 
 		ctx := context.WithValue(r.Context(), "userId", session.UserId)

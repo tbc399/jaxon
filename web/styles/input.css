@@ -3,18 +3,20 @@
 @tailwind utilities;
 
 .tab {
-  @apply text-sm font-medium text-gray-400 hover:text-gray-200 h-full px-3 py-4
+  /*@apply text-sm font-medium text-gray-400 hover:text-gray-200 h-full px-3 py-4*/
+  @apply text-xs font-semibold text-base-content/75 bg-transparent h-full px-3 py-1.5 rounded-md
 }
 
 .tab-active {
-  @apply text-sm font-medium text-gray-100 border-b-[3px] border-teal-600 px-3 py-4 h-full
+  /*@apply text-sm font-medium text-gray-100 border-b-[3px] border-teal-600 px-3 py-4 h-full*/
+  @apply text-xs font-semibold text-base-content bg-neutral px-3 py-1.5 h-full rounded-md
 }
 
 .menu-item {
-  @apply text-gray-100 hover:bg-slate-800
+  @apply text-gray-100 hover:bg-neutral
 }
 
 .menu-item-selected {
-  @apply text-gray-100 bg-slate-800
+  @apply text-gray-100 bg-neutral
 }
 

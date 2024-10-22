@@ -16,9 +16,9 @@ import (
 func styleAmount(amount int) string {
 	style := "table-cell px-6 py-2.5 whitespace-nowrap"
 	if amount > 0 {
-		return style + " dark:text-emerald-500"
+		return style + " text-success font-medium"
 	}
-	return style + " dark:text-slate-500"
+	return style + " text-base-content"
 }
 
 func transactionListItem(transaction *models.Transaction) templ.Component {
@@ -138,9 +138,9 @@ func transactionListItem(transaction *models.Transaction) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%0.2f", float32(transaction.Amount/100)))
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%0.2f", float32(transaction.Amount)/100.0))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 39, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 39, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -148,9 +148,9 @@ func transactionListItem(transaction *models.Transaction) templ.Component {
 			}
 		} else {
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%0.2f", float32(transaction.Amount/100)))
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%0.2f", float32(transaction.Amount)/100.0))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 41, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 41, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func transactionListItem(transaction *models.Transaction) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("#tran_%s", transaction.Id))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 48, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 47, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -177,7 +177,7 @@ func transactionListItem(transaction *models.Transaction) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 50, Col: 84}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transaction-list-item.templ`, Line: 49, Col: 84}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

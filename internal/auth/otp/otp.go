@@ -82,7 +82,7 @@ func FetchByMagicToken(magicToken string, db *sqlx.DB) (*OneTimePass, error) {
 
 func SendEmail(email string, otpass *OneTimePass, db *sqlx.DB) {
 	slog.Info("Sending email")
-	magicUrl := fmt.Sprintf("http://localhost:8080/login/magic/%s", otpass.MagicToken)
+	magicUrl := fmt.Sprintf("http://localhost:8080/auth/login/magic/%s", otpass.MagicToken)
 	slog.Info("magic url", "url", magicUrl)
 	slog.Info("sending otp email", "otp", otpass.Id, "email", email)
 }
