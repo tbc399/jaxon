@@ -1,7 +1,6 @@
 package routes
 
 import (
-	//"log/slog"
 	"log/slog"
 	"net/http"
 
@@ -9,6 +8,7 @@ import (
 	accountmods "jaxon.app/jaxon/internal/account/models/accounts"
 	"jaxon.app/jaxon/internal/templates"
 	"jaxon.app/jaxon/internal/transaction/models"
+	"jaxon.app/jaxon/internal/transaction/services"
 	transactiontemps "jaxon.app/jaxon/internal/transaction/templates"
 )
 
@@ -16,6 +16,7 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /transactions", getTransactionsFullPage)
 	router.HandleFunc("GET /transactions/partial", getTransactionsPartial)
 	router.HandleFunc("GET /transactions/upload", getTransactionsUpload)
+	router.HandleFunc("POST /transactions/upload", uploadTransactions)
 }
 
 func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
@@ -66,4 +67,24 @@ func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
 func getTransactionsUpload(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)	
 	transactiontemps.UploadPage().Render(r.Context(), w)
+}
+
+func uploadTransactions(w http.ResponseWriter, r *http.Request) {
+
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	file, _, err := r.FormFile("file")
+
+	if err != nil {
+		slog.Error("Failed to get the upload file from request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	
+	// TODO make into a go routine
+	services.UploadTransactions(file, userId, db)
+
+	http.Redirect(w, r, "/transactions", http.StatusSeeOther)
+
 }

@@ -1,21 +1,25 @@
 package templates
 
-import "jaxon.app/jaxon/internal/transaction/models"
-import accountmods "jaxon.app/jaxon/internal/account/models/accounts"
-import "jaxon.app/jaxon/internal/templates"
+import (
+	accountmods "jaxon.app/jaxon/internal/account/models/accounts"
+	"jaxon.app/jaxon/internal/templates"
+	"jaxon.app/jaxon/internal/transaction/models"
+)
 
 templ Transactions(transactions []models.Transaction, accounts []accountmods.Account, activeTab string) {
 	<!-- Main content window -->
-	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-[1048px] items-center justify-center h-full overflow-y-auto py-3 px-3">
-        <div class="w-full h-14 flex flex-row justify-between items-center gap-x-2 mb-5">
-            @templates.TabGroup(
-                activeTab,
-                templates.TabTempl{Name: "Transactions", HxGet: "/transactions/transactions-tab", HxPush: "/transactions"},
-                templates.TabTempl{Name: "Rules", HxGet: "/transactions/rules-tab", HxPush: "/transations/rules"},
-            )
-        </div>
-        <div class="w-full flex flex-row justify-between mb-2">
-            <select data-hs-select='{
+	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full sm:w-[1048px] items-center justify-center h-full overflow-y-auto py-3 px-3">
+		<div class="w-full h-14 flex flex-row justify-between items-center gap-x-2 mb-5">
+			@templates.TabGroup(
+				activeTab,
+				templates.TabTempl{Name: "Transactions", HxGet: "/transactions/transactions-tab", HxPush: "/transactions"},
+				templates.TabTempl{Name: "Rules", HxGet: "/transactions/rules-tab", HxPush: "/transations/rules"},
+			)
+		</div>
+		<div class="w-full flex flex-row justify-between mb-2">
+            /*
+			<select
+				data-hs-select='{
               "placeholder": "Select account",
               "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
               "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-neutral rounded-md text-start text-xs font-medium text-base-content focus:outline-none focus:ring-2 focus:ring-gray-800",
@@ -23,21 +27,26 @@ templ Transactions(transactions []models.Transaction, accounts []accountmods.Acc
               "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
               "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 dark:text-blue-500 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
               "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg viewBox=\"0 0 24 24\" class=\"size-3 stroke-[1.5px] fill-none stroke-base-content\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m19.5 8.25-7.5 7.5-7.5-7.5\" /></svg></div>"
-            }' class="hidden">
-              <option value="">Choose</option>
-              for _, account := range accounts {
-                  <option value={ account.Id } >{ account.Name }</option>
-              }
-            </select>
-            <button class="btn btn-square bg-base-100 border-none hover:btn-neutral btn-sm" 
-            hx-swap="beforeend" 
-            hx-target="body" 
-            hx-get="/transactions/upload">
-                <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-base-content stroke-[2px]">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-                </svg>
-            </button>                
-        </div>
-        @transactionsPartial(transactions)
+            }'
+				class="hidden"
+			>
+				<option value="">Choose</option>
+				for _, account := range accounts {
+					<option value={ account.Id }>{ account.Name }</option>
+				}
+			</select>
+            */
+			<button
+				class="hidden btn btn-square bg-base-100 border-none hover:btn-neutral btn-sm"
+				hx-swap="beforeend"
+				hx-target="body"
+				hx-get="/transactions/upload"
+			>
+				<svg viewBox="0 0 24 24" class="size-4 fill-none stroke-base-content stroke-[2px]">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"></path>
+				</svg>
+			</button>
+		</div>
+		@transactionsPartial(transactions)
 	</div>
 }

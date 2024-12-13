@@ -1,7 +1,9 @@
 package templates
 
-import "fmt"
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // tab styling for accounts tab
 func tabStyling(activeTab string, expected string) string {
@@ -18,10 +20,10 @@ type TabTempl struct {
 }
 
 templ TabGroup(activeTab string, tabs ...TabTempl) {
-	<div id="accounts-tab-group" hx-target="#accounts-tab-list" hx-swap="outerHTML" class="flex rounded-lg bg-base-200 p-1">
+	<div id={ string(fmt.Sprintf("%s-tab-group", activeTab)) } hx-target={ string(fmt.Sprintf("#%s-tab-list", activeTab)) } hx-swap="outerHTML" class="flex rounded-lg bg-base-200 p-1">
 		<script>
             // Tab selection changing
-            htmx.on("#accounts-tab-group", "htmx:beforeRequest", function(event) {
+            htmx.on({ fmt.Sprintf("#%s-tab-group", activeTab) }, "htmx:beforeRequest", function(event) {
               let currentTab = document.querySelector('.tab-active');
               currentTab.classList.remove('tab-active');
               currentTab.classList.add('tab');

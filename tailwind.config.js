@@ -22,12 +22,9 @@ module.exports = {
     require('daisyui')
   ],
   daisyui: {
-    darkTheme: "sunset",
-    themes: [
-        "sunset",
-        "forest",
-        "night",
-    ]
+    themes: false,
+    //darkTheme: "sunset",
+    styled: false,
   }
 }
 

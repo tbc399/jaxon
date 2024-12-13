@@ -11,7 +11,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"jaxon.app/jaxon/internal/auth"
-	//budgets "jaxon.app/jaxon/internal/budget/routes"
+	budgets "jaxon.app/jaxon/internal/budget/routes"
 	accounts "jaxon.app/jaxon/internal/account/routes"
 	dashboard "jaxon.app/jaxon/internal/dashboard/routes"
 	profile "jaxon.app/jaxon/internal/profile/routes"
@@ -48,7 +48,7 @@ func main() {
 	appRouter := http.NewServeMux()
 
 	//auth.AddRoutes(router)
-	//budgets.AddRoutes(router)
+	budgets.AddRoutes(appRouter)
 	dashboard.AddRoutes(appRouter)
 	transactions.AddRoutes(appRouter)
 	accounts.AddRoutes(appRouter)

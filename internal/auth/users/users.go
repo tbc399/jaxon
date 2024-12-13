@@ -14,6 +14,7 @@ type User struct {
 	Id               string
 	Email            string
 	StripeCustomerId sql.NullString `db:"stripe_customer_id"`
+	Active bool
 	CreatedAt        time.Time      `db:"created_at"`
 	UpdatedAt        time.Time      `db:"updated_at"`
 }
@@ -23,13 +24,14 @@ func New(email string) *User {
 	return &User{
 		Id:        shortuuid.New(),
 		Email:     email,
+		Active: true,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
 }
 
 func (user *User) Save(db *sqlx.DB) (*User, error) {
-	sqls := `INSERT INTO users (id, email, stripe_customer_id, created_at, updated_at) VALUES (:id, :email, :stripe_customer_id, :created_at, :updated_at)`
+	sqls := `INSERT INTO users (id, email, stripe_customer_id, active, created_at, updated_at) VALUES (:id, :email, :stripe_customer_id, :active, :created_at, :updated_at)`
 	slog.Info("Executing sql", "sql", sqls)
 	tx := db.MustBegin()
 	_, err := tx.NamedExec(sqls, user)
@@ -59,3 +61,19 @@ func FetchByEmail(email string, db *sqlx.DB) (*User, error) {
 	}
 	return &user, nil
 }
+
+func FetchMany(db *sqlx.DB) ([]User, error) {
+	sqls := "SELECT * FROM users WHERE active = true"
+	slog.Info("Executing sql", "sql", sqls)
+	users := []User{}
+	err := db.Get(&users, sqls)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch users", "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch user", "error", err.Error())
+		return nil, err
+	}
+	return users, nil
+}	

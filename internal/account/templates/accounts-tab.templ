@@ -17,7 +17,7 @@ templ AccountsTab(accounts map[string][]accountModels.Account, stripePubKey stri
 				type="button"
 				title="Connect new account"
 				class="py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md
-                      text-gray-100 bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
+                      text-gray-100 bg-teal-900 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
                       disabled:pointer-events-none"
 			>
 				<svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-[2.5px] stroke-gray-100">
@@ -62,7 +62,7 @@ templ AccountsTab(accounts map[string][]accountModels.Account, stripePubKey stri
 				</div>
 				<div class="grid grid-cols-2 gap-4">
 					for _, account := range accountList {
-						<div class="flex flex-col rounded-lg w-full border border-zinc-800/40 shadow-sm shadow-zinc-950 bg-neutral/50 text-zinc-300 p-4">
+						<div class="flex flex-col rounded-lg w-full   bg-neutral/50 text-base-content p-4">
 							<div class="flex flex-row justify-between mb-4">
 								<div class="flex flex-row gap-x-2 items-center">
 									<div class="text-sm font-semibold">{ account.Name }</div>

@@ -18,7 +18,7 @@ templ transactionListItem(transaction *models.Transaction) {
 		hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
 		hx-swap="none"
 		id={ fmt.Sprintf("tran_%s", transaction.Id) }
-		class="table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20"
+		class="table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20 text-xs"
 	>
 		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-gray-400">
 			{ transaction.Date.Format("Jan 02, 2006") }

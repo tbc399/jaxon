@@ -1,9 +1,6 @@
 package templates
 
-import (
-    "jaxon.app/jaxon/internal/templates"
-)
-
+import "jaxon.app/jaxon/internal/templates"
 
 templ Profile(settingsSelection templ.Component, activeTab string) {
 	<div hx-swap-oob="outerHTML:#main-content" id="main-content" class="flex flex-col h-full items-center overflow-y-auto">
