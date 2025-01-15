@@ -61,3 +61,19 @@ func FetchAll(userId string, db *sqlx.DB) ([]Category, error) {
 	}
 	return categories, nil
 }
+
+func Fetch(id string, db *sqlx.DB) (*Category, error) {
+	sqls := "SELECT * FROM categories WHERE id = $1"
+	slog.Info("Executing sql", "sql", sqls, "category_id", id)
+	category := new(Category)
+	err := db.Get(category, sqls, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch category", "id", id, "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch category", "id", id, "error", err.Error())
+		return nil, err
+	}
+	return category, nil
+}

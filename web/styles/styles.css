@@ -1994,6 +1994,10 @@ input.tab:checked + .tab-content,
   margin-bottom: 2rem;
 }
 
+.me-0 {
+  margin-inline-end: 0px;
+}
+
 .me-0\.5 {
   margin-inline-end: 0.125rem;
 }
@@ -2036,10 +2040,6 @@ input.tab:checked + .tab-content,
 
 .mt-auto {
   margin-top: auto;
-}
-
-.ms-72 {
-  margin-inline-start: 18rem;
 }
 
 .block {
@@ -2643,9 +2643,9 @@ input.tab:checked + .tab-content,
   background-color: var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)));
 }
 
-.bg-teal-50 {
+.bg-sky-50 {
   --tw-bg-opacity: 1;
-  background-color: rgb(240 253 250 / var(--tw-bg-opacity));
+  background-color: rgb(240 249 255 / var(--tw-bg-opacity));
 }
 
 .bg-teal-600 {
@@ -2670,31 +2670,6 @@ input.tab:checked + .tab-content,
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-gray-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
-}
-
-.bg-cyan-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(236 254 255 / var(--tw-bg-opacity));
-}
-
-.bg-stone-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 250 249 / var(--tw-bg-opacity));
-}
-
-.bg-amber-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 251 235 / var(--tw-bg-opacity));
-}
-
-.bg-sky-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(240 249 255 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {
@@ -2849,6 +2824,11 @@ input.tab:checked + .tab-content,
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 .py-1\.5 {
@@ -3042,6 +3022,11 @@ input.tab:checked + .tab-content,
   color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
 }
 
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -3169,11 +3154,6 @@ input.tab:checked + .tab-content,
 .text-zinc-300 {
   --tw-text-opacity: 1;
   color: rgb(212 212 216 / var(--tw-text-opacity));
-}
-
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .decoration-2 {
@@ -3652,12 +3632,12 @@ input.tab:checked + .tab-content,
     margin-right: auto;
   }
 
-  .sm\:mt-0 {
-    margin-top: 0px;
-  }
-
   .sm\:ms-72 {
     margin-inline-start: 18rem;
+  }
+
+  .sm\:mt-0 {
+    margin-top: 0px;
   }
 
   .sm\:h-auto {

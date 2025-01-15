@@ -129,11 +129,11 @@ func CreateDefaultCategories(userId string) {
 	cats := []categories.Category{}
 	
 	for _, name := range expenseCategories {
-		cats := append(cats, *categories.NewCategory(name, categories.ExpenseCategoryType, userId))
+		cats = append(cats, *categories.NewCategory(name, categories.ExpenseCategoryType, userId))
 	}
 
 	for _, name := range incomeCategories {
-		cats := append(cats, *categories.NewCategory(name, categories.IncomeCategoryType, userId))
+		cats = append(cats, *categories.NewCategory(name, categories.IncomeCategoryType, userId))
 	}
 
 	//categories.CreateMany(userId, )

@@ -10,12 +10,13 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
+	accounts "jaxon.app/jaxon/internal/account/routes"
 	"jaxon.app/jaxon/internal/auth"
 	budgets "jaxon.app/jaxon/internal/budget/routes"
-	accounts "jaxon.app/jaxon/internal/account/routes"
+	budgetServices "jaxon.app/jaxon/internal/budget/services"
 	dashboard "jaxon.app/jaxon/internal/dashboard/routes"
-	profile "jaxon.app/jaxon/internal/profile/routes"
 	"jaxon.app/jaxon/internal/middleware"
+	profile "jaxon.app/jaxon/internal/profile/routes"
 	transactions "jaxon.app/jaxon/internal/transaction/routes"
 )
 
@@ -71,6 +72,8 @@ func main() {
 			return context.WithValue(ctx, "db", db)
 		},
 	}
+
+	go budgetServices.Rollover(ctx, db)
 
 	log.Println("Starting server on port :8080")
 	server.ListenAndServe()
