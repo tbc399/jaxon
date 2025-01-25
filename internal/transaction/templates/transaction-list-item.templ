@@ -16,6 +16,7 @@ func styleAmount(amount int) string {
 templ transactionListItem(transaction *models.Transaction) {
 	<div
 		hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
+        hx-push-url={ fmt.Sprintf("/transactions/%s", transaction.Id) }
 		hx-swap="none"
 		id={ fmt.Sprintf("tran_%s", transaction.Id) }
 		class="table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20 text-xs"
@@ -27,8 +28,8 @@ templ transactionListItem(transaction *models.Transaction) {
 			{ transaction.Description }
 		</div>
 		<div class="table-cell px-6 py-2.5 whitespace-nowrap text-gray-300">
-			if transaction.CategoryName != "" {
-				transaction.CategoryName
+			if transaction.CategoryId.Valid {
+				{ transaction.CategoryId.String }
 			} else {
 				Uncategorized
 			}

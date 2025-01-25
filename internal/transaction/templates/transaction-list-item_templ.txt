@@ -1,9 +1,9 @@
 <div hx-get=\"
+\" hx-push-url=\"
 \" hx-swap=\"none\" id=\"
 \" class=\"table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20 text-xs\"><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-gray-400\">
 </div><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-base-content overflow-ellipsis overflow-x-hidden\">
 </div><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-gray-300\">
-transaction.CategoryName
 Uncategorized
 </div>
 <div class=\"

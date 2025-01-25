@@ -20,10 +20,10 @@ templ budgetListItem(budgetView *budgets.BudgetView) {
 		<div class="flex flex-col justify-between w-full py-2 px-3">
 			<div class="flex flex-row justify-between w-full">
 				<div>
-					<span class="text-sm font-normal text-slate-200">{ budgetView.CategoryName }</span>
+					<span class="text-sm font-normal text-slate-800">{ budgetView.CategoryName }</span>
 				</div>
 				<div class="">
-					<span class="text-lg font-medium text-slate-200">
+					<span class="text-lg font-medium text-slate-800">
 						<span class="font-normal text-sm text-teal-700 me-0.5">$</span>{ strconv.Itoa(budgetView.Amount) }
 					</span>
 				</div>

@@ -11,13 +11,14 @@ func menuSelectionClasses(menuSelection string, expected string) string {
 templ App(title string, menuSelection string, partial templ.Component) {
 	<!DOCTYPE html>
 	//<html lang="en" data-theme="sunset" class="bg-base-300 h-screen">
-	<html lang="en" class="bg-sky-50 h-screen">
+	<html lang="en" class="bg-neutral-900 h-screen">
 		@Header(title)
 		<!-- ========== MAIN CONTENT ========== -->
 		// Body
 		<body class="static flex flex-row h-full w-full overflow-y-auto">
 			// drawer
-			<div class="absolute bottom-0 z-10 bg-[#26474C] left-0 flex flex-col justify-between ps-5 pe-3 pb-4 sm:h-full w-full sm:w-72 border-e border-neutral">
+			//<div class="absolute bottom-0 z-10 bg-[#26474C] left-0 flex flex-col justify-between ps-5 pe-3 pb-4 sm:h-full w-full sm:w-72 border-e border-neutral">
+			<div class="absolute bottom-0 z-10 bg-transparent left-0 flex flex-col justify-between ps-5 pe-3 pb-4 sm:h-full w-full sm:w-72 border-e border-neutral">
 				<div>
 					// sidebar menu
 					<div id="app-menu-group" class="flex w-full flex-row justify-between sm:flex-col gap-y-1 font-normal text-sm text-slate-200">
