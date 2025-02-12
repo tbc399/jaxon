@@ -33,7 +33,7 @@ templ BudgetCreate(categories []categories.Category) {
                   </div>
                   <div class="flex items-end">
                     @templates.Dropdown(categories, "cat")
-                    <select id="create-budget-category" name="category" class="dropdown hidden">
+                    <select id="create-budget-category" name="category" class="dropdown">
                       for _, category := range categories {
                           <option id={ fmt.Sprintf("cat_%s", category.Id) } value={ category.Id }>{ category.Name }</option>
                       }

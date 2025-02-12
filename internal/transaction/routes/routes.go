@@ -31,6 +31,8 @@ func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
 
 	transactions, err := models.FetchMany(userId, db)
 
+	groupedTransactions := services.GroupTransactionsByDate(transactions)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -42,7 +44,7 @@ func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
 		slog.Error("Failed to fetch accounts")
 	}
 
-	transactionsPartial := transactiontemps.Transactions(transactions, accounts, "transactions")
+	transactionsPartial := transactiontemps.Transactions(groupedTransactions, accounts, "transactions")
 	templates.App("Transactions", "transactions", transactionsPartial).Render(r.Context(), w)
 
 }
@@ -54,6 +56,8 @@ func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
 
 	transactions, err := models.FetchMany(userId, db)
 
+	groupedTransactions := services.GroupTransactionsByDate(transactions)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -65,7 +69,7 @@ func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
 		slog.Error("Failed to fetch accounts")
 	}
 
-	transactiontemps.Transactions(transactions, accounts, "transactions").Render(r.Context(), w)
+	transactiontemps.Transactions(groupedTransactions, accounts, "transactions").Render(r.Context(), w)
 
 }
 

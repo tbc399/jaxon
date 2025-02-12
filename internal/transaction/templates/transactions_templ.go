@@ -10,11 +10,11 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	accountmods "jaxon.app/jaxon/internal/account/models/accounts"
-	"jaxon.app/jaxon/internal/templates"
-	"jaxon.app/jaxon/internal/transaction/models"
+	//"jaxon.app/jaxon/internal/templates"
+	//"jaxon.app/jaxon/internal/transaction/models"
 )
 
-func Transactions(transactions []models.Transaction, accounts []accountmods.Account, activeTab string) templ.Component {
+func Transactions(transactions []interface{}, accounts []accountmods.Account, activeTab string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -36,23 +36,11 @@ func Transactions(transactions []models.Transaction, accounts []accountmods.Acco
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templates.TabGroup(
-			activeTab,
-			templates.TabTempl{Name: "Transactions", HxGet: "/transactions/transactions-tab", HxPush: "/transactions"},
-			templates.TabTempl{Name: "Rules", HxGet: "/transactions/rules-tab", HxPush: "/transations/rules"},
-		).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = transactionsPartial(transactions).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 3)
+		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

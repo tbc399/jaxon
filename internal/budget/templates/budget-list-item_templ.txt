@@ -1,7 +1,7 @@
 <div hx-get=\"
 \" hx-swap=\"none\" id=\"
-\" class=\"group flex flex-col justify-between w-full rounded-md bg-transparent border border-neutral min-h-16\"><div class=\"flex flex-col justify-between w-full py-2 px-3\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm font-normal text-slate-800\">
-</span></div><div class=\"\"><span class=\"text-lg font-medium text-slate-800\"><span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>
-</span></div></div></div><div class=\"flex w-full h-2 bg-neutral rounded-b overflow-hidden\" role=\"progressbar\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\">
+\" class=\"group flex flex-col justify-between w-full p-1 rounded-xl dark:bg-slate-800/50 ring-1 dark:ring-slate-700/50 min-h-16\"><div class=\"rounded-lg dark:bg-gray-900\"><div class=\"flex flex-col justify-between w-full py-2 px-3\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm font-normal text-white\">
+</span></div><div class=\"\"><span class=\"text-lg font-medium text-white\"><span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>
+</span></div></div></div><div class=\"flex w-full h-2 bg-neutral rounded-b overflow-hidden\" role=\"progressbar\">
 <div class=\"
-\"></div></div></div>
+\"></div></div></div><div class=\"flex justify-center py-2 text-gray-900 dark:text-white text-sm gap-x-1\"><a class=\"font-light underline underline-offset-2\" href=\"/budgets/edit\">edit</a> <a class=\"font-light\">remove</a></div></div>

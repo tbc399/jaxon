@@ -75,7 +75,7 @@ func budgetListItem(budgetView *budgets.BudgetView) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(budgetView.CategoryName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-list-item.templ`, Line: 23, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-list-item.templ`, Line: 24, Col: 94}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func budgetListItem(budgetView *budgets.BudgetView) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(budgetView.Amount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-list-item.templ`, Line: 27, Col: 102}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-list-item.templ`, Line: 28, Col: 124}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -98,7 +98,7 @@ func budgetListItem(budgetView *budgets.BudgetView) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 = []any{"flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500 ", progressWidth(34)}
+		var templ_7745c5c3_Var6 = []any{"flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500 ", progressWidth(budgetView.TransactionsTotal)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

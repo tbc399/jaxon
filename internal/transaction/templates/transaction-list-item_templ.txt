@@ -1,14 +1,13 @@
 <div hx-get=\"
 \" hx-push-url=\"
 \" hx-swap=\"none\" id=\"
-\" class=\"table-row dark:hover:bg-gray-900/20 dark:active:bg-gray-800/20 text-xs\"><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-gray-400\">
-</div><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-base-content overflow-ellipsis overflow-x-hidden\">
-</div><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-gray-300\">
+\" class=\"flex flex-row justify-between items-center dark:hover:bg-slate-800/50 w-full rounded-2xl px-3 py-3\"><div class=\"flex flex-col\"><div class=\"whitespace-nowrap dark:text-white overflow-ellipsis overflow-x-hidden text-sm font-semibold\">
+</div><div class=\"whitespace-nowrap dark:text-gray-400 font-normal text-sm\">
 Uncategorized
-</div>
+</div></div><div class=\"flex flex-col\">
 <div class=\"
 \"><span class=\"w-full flex justify-end\">
 +
-</span></div><div class=\"table-cell px-6 py-2.5 whitespace-nowrap text-sm font-bold text-teal-700 dark:text-teal-700\"><button hx-target=\"
+</span></div><div class=\"whitespace-nowrap dark:text-gray-400\">-</div><div class=\"whitespace-nowrap font-bold text-teal-700 dark:text-teal-700\"><button hx-target=\"
 \" hx-swap=\"beforeend\" hx-get=\"
-\" class=\"dark:hover:text-teal-800 hidden\">Edit</button></div></div>
+\" class=\"dark:hover:text-teal-800 hidden\">Edit</button></div></div></div>

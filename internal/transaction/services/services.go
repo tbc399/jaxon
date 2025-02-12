@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"io"
 	"log/slog"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -79,4 +80,22 @@ func UploadTransactions(file io.Reader, userId string, db *sqlx.DB) {
 
 	models.CreateMany(transactions, db)
 
+}
+
+func GroupTransactionsByDate(transactions []models.TransactionView) []interface{} {
+	sort.Slice(transactions, func (lhs, rhs int) bool {
+		return transactions[lhs].Date.After(transactions[rhs].Date)
+	})
+	groups := make([]interface{}, 0)
+	t := transactions[0].Date
+	currentDate := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+	groups = append(groups, currentDate)
+	for _, t := range transactions {
+		if !(t.Date.Year() == currentDate.Year() && t.Date.Month() == currentDate.Month() && t.Date.Day() == currentDate.Day()) {
+			currentDate = time.Date(t.Date.Year(), t.Date.Month(), t.Date.Day(), 0, 0, 0, 0, t.Date.Location())
+			groups = append(groups, currentDate)
+		}
+		groups = append(groups, t)
+	}
+	return groups
 }

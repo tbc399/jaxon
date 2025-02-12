@@ -20,9 +20,9 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /budgets", createBudget)
 	router.HandleFunc("GET /budgets/categories", getCategoriesPage)
 	router.HandleFunc("POST /budgets/categories", createCategory)
-	//router.HandleFunc("GET /budgets/{id}/edit", getOneTimePass)
-	//router.HandleFunc("GET /login/magic/{magic_token}", getOtpValidationPage)
-	//router.HandleFunc("POST /login/magic/{magic_token}", submitOtpValidation)
+	//router.HandleFunc("GET /budgets/{id}/edit", getBudgetEditPartial)
+	router.HandleFunc("GET /budgets/{id}", getBudgetEditPage)
+	//router.HandleFunc("PUT /budgets/{id}", updateBudget)
 }
 
 func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
@@ -58,6 +58,25 @@ func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
 }
 
 func getBudgetCreatePage(w http.ResponseWriter, r *http.Request) {
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	hxRequest := r.Header.Get("Hx-Request")
+
+	categories, err := catmods.FetchAll(userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if hxRequest == "true" {
+		budgettemps.BudgetCreate(categories).Render(r.Context(), w)
+	} else {
+		createPartial := budgettemps.BudgetCreate(categories)
+		templates.App("Create Budget", "budgets", createPartial).Render(r.Context(), w)
+	}
+}
+
+func getBudgetEditPage(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 

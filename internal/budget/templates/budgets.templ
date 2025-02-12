@@ -9,7 +9,7 @@ templ Budgets(budgets []budgets.BudgetView, activeTab string) {
 	<!-- Budget Tab Bar -->
 	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full md:w-[1048px] px-4 justify-center h-full overflow-y-auto">
         <div class="flex justify-between items-center mb-8 pt-16">
-            <h1 class="font-semibold text-xl text-black">Budgets</h1>
+            <h1 class="font-semibold text-xl dark:text-white">Budgets</h1>
             <button
                 id="add-budget-button"
                 type="button"
@@ -35,7 +35,7 @@ templ Budgets(budgets []budgets.BudgetView, activeTab string) {
 				templates.TabTempl{Name: "Categories", HxGet: "/budgets/categories", HxPush: "/budgets/categories"},
 			)
             */
-            <button class="flex flex-row gap-x-2 text-sm font-medium text-neutral-content hover:bg-neutral hover:text-base-content rounded-md px-2 py-1.5"
+            <button class="flex flex-row gap-x-2 text-sm font-medium text-gray-400 hover:bg-slate-700/25 hover:text-gray-100 rounded-md px-2 py-1.5"
                 hx-get="/budgets/categories"
                 hx-push-url="budgets/categories"
                 hx-swap="none">
@@ -128,7 +128,7 @@ templ Budgets(budgets []budgets.BudgetView, activeTab string) {
                         Add budget
                     </button>
                 </div>
-				<div class="flex flex-col py-2 gap-y-2.5 w-full overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-800">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-2 px-0.5 w-full overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-800">
 					for _, budget := range budgets {
 						@budgetListItem(&budget)
 					}

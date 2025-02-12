@@ -13,6 +13,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lithammer/shortuuid/v4"
 	//"jaxon.app/jaxon/internal/auth/users"
+	//"jaxon.app/jaxon/internal/auth/users"
 )
 
 type Transaction struct {
@@ -102,9 +103,22 @@ func NewTransaction(userId, accountId, description string, date time.Time, amoun
 	}
 }
 
-func FetchMany(userId string, db *sqlx.DB) ([]Transaction, error) {
-	sqls := "SELECT * FROM transactions WHERE user_id = $1 ORDER BY date DESC"
-	transactions := []Transaction{}
+type TransactionView struct {
+	Id           string
+	Description  string
+	Amount       int            // transaction in cents
+	CategoryId sql.NullString `db:"category_id"`
+	CategoryName sql.NullString         `db:"category_name"`
+	Date         time.Time
+	Notes        sql.NullString
+	Hidden       bool
+}
+
+func FetchMany(userId string, db *sqlx.DB) ([]TransactionView, error) {
+	sqls := `SELECT t.id, t.description, t.amount, t.category_id, c.name as category_name, t.date, t.notes, t.hidden FROM transactions AS t LEFT JOIN categories AS c ON t.category_id = c.id 
+		WHERE t.user_id = $1 ORDER BY t.date DESC`
+	slog.Info("Executing sql", "sql", sqls)
+	transactions := []TransactionView{}
 	err := db.Select(&transactions, sqls, userId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -178,3 +192,5 @@ func CreateMany(transactions []Transaction, db *sqlx.DB) error {
 	return nil
 
 }
+
+
