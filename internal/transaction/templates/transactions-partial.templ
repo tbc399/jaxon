@@ -15,8 +15,8 @@ templ transactionsPartial(transactions []interface{}) {
 				<div class="">
 					for _, transaction := range transactions {
                         if isDate(transaction) {
-                            <div class="text-sm text-gray-500 font-medium ps-2 py-3">
-                                { transaction.(time.Time).Format("Jan 02, 2006") }
+                            <div class="text-sm text-gray-600 font-medium ps-2 py-3">
+                                { transaction.(time.Time).Format("January 02, 2006") }
                             </div>
                         } else {
                             @transactionListItem(transaction.(models.TransactionView))

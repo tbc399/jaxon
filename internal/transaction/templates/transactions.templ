@@ -8,17 +8,8 @@ import (
 
 templ Transactions(transactions []interface{}, accounts []accountmods.Account, activeTab string) {
 	<!-- Main content window -->
-	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full sm:w-[850px] items-center justify-center h-full py-3 px-3">
-        /*
-		<div class="hidden w-full h-14 flex flex-row justify-between items-center gap-x-2 mb-5">
-			@templates.TabGroup(
-				activeTab,
-				templates.TabTempl{Name: "Transactions", HxGet: "/transactions/transactions-tab", HxPush: "/transactions"},
-				templates.TabTempl{Name: "Rules", HxGet: "/transactions/rules-tab", HxPush: "/transations/rules"},
-			)
-		</div>
-        */
-        <div class="flex flex-row justify-start w-full min-h-16 text-lg font-medium text-gray-100">
+	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full items-center justify-center h-full py-3 px-3">
+        <div class="flex flex-row justify-start w-full py-2 text-lg font-normal text-gray-100">
             <h1>Transactions</h1>
         </div>
 		<div class="w-full flex flex-row justify-between">

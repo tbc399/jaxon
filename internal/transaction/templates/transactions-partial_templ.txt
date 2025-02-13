@@ -1,4 +1,4 @@
 <div id=\"transactions-tab-list\" class=\"flex flex-row w-full justify-center h-full\"><div class=\"rounded-md min-w-full\"><div class=\"w-full\"><div class=\"\">
-<div class=\"text-sm text-gray-500 font-medium ps-2 py-3\">
+<div class=\"text-sm text-gray-600 font-medium ps-2 py-3\">
 </div>
 </div></div></div><!-- Transaction Detail --><div class=\"hidden flex flex-col py-4 px-4 border-s border-neutral\"><div id=\"transaction-detail\"></div></div><!-- End Transaction Detail --></div>
