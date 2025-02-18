@@ -1,25 +1,33 @@
 package templates
 
-templ UploadPage() {
+import "jaxon.app/jaxon/internal/account/models/accounts"
+
+
+templ UploadPage(accounts []models.Account) {
 	<div _="on closeUploadModal remove me">
 		<!-- modal underlay -->
 		<div
 			id="upload-file-modal-backdrop"
 			style="z-index: 79;"
-			class="transition duration fixed inset-0 dark:bg-salte-800 bg-opacity-0 dark:bg-opacity-40 hs-overlay-backdrop"
+			class="hidden transition duration fixed inset-0 dark:bg-slate-800 bg-opacity-0 dark:bg-opacity-40 hs-overlay-backdrop"
 			_="on click trigger closeUploadModal"
 		></div>
-		<!-- end modal underlay -->
-		<!-- transaction upload modal -->
-		<div
+		<!-- end modal underlay --> <!-- transaction upload modal --> <div
 			id="transaction-upload-file-modal"
-			class="hs-overlay open size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
+			class="hidden hs-overlay open size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
 			aria-hidden="false"
 			tabindex="-1"
 		>
-			<div class="hs-overlay-open:mt-0 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-10 opacity-0 transition-all max-w-full max-h-full h-full sm:hs-overlay-open:mt-10 sm:mt-0 sm:max-w-lg sm:max-h-none sm:h-auto sm:mx-auto">
+			//<div class="hs-overlay-open:mt-0 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-10 opacity-0 transition-all max-w-full max-h-full h-full sm:hs-overlay-open:mt-10 sm:mt-0 sm:max-w-lg sm:max-h-none sm:h-auto sm:mx-auto">
+            <div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full items-center justify-center h-full pt-8 px-32">
+                <div hx-get="/transactions" hx-target="#main-content" hx-push-url="/transactions">
+                    <span>Back to transactions</span>
+                </div>
+                <div class="flex flex-row justify-start w-full py-2 text-lg font-normal text-gray-100">
+                    <h1>Upload transactions</h1>
+                </div>
 				<form method="post" action="/transactions/upload" enctype="multipart/form-data">
-					<div class="flex flex-col pointer-events-auto max-w-full max-h-full h-full sm:max-w-lg sm:max-h-none sm:h-auto sm:border sm:rounded-xl sm:shadow-md sm:shadow-base-200 bg-base-100 sm:border-neutral">
+					<div class="flex flex-col pointer-events-auto max-w-full max-h-full h-full sm:max-w-lg sm:max-h-none sm:h-auto sm:border sm:rounded-xl sm:shadow-md sm:shadow-base-200 dark:bg-gray-900 sm:dark:border-gray-800">
 						<div class="flex flex-col py-3 px-4">
 							<div class="flex justify-end mb-2">
 								<button
@@ -87,6 +95,21 @@ templ UploadPage() {
 									/>
 								</label>
 							</div>
+                            <div class="flex items-center justify-center w-full h-full">
+                                <select data-hs-select='{
+                                  "placeholder": "Select an account...",
+                                  "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+                                  "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-neutral-600",
+                                  "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
+                                  "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
+                                  "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 dark:text-blue-500 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+                                  "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
+                                }'>
+                                  for _, account := range accounts {
+                                      <option value={ account.Id }>{ account.Name }</option>
+                                  }
+                                </select>
+                            </div>
 							<div class="px-10 mt-2 flex justify-end dark:text-slate-500 dark:hover:text-teal-700 dark:hover:underline dark:hover:underline-offset-1 text-sm font-bold">
 								<a href="#">
 									More options

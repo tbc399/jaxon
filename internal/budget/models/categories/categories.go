@@ -15,18 +15,18 @@ import (
 )
 
 const (
-	IncomeCategoryType = "income"
+	IncomeCategoryType  = "income"
 	ExpenseCategoryType = "expense"
 )
 
 type Category struct {
-	//templates.Selectable
-    Id string
-    Name string
-    Type string // from CategorType constants
-	UserId string `db:"user_id"`
+	// templates.Selectable
+	Id        string
+	Name      string
+	Type      string    // from CategorType constants
+	UserId    string    `db:"user_id"`
 	CreatedAt time.Time `db:"created_at"`
-    UpdatedAt time.Time `db:"updated_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (self Category) GetId() string {
@@ -73,10 +73,10 @@ func (self Category) Save(db *sqlx.DB) error {
 func NewCategory(name, catType, userId string) *Category {
 	now := time.Now().UTC()
 	return &Category{
-		Id: shortuuid.New(),
-		Name: name,
-		Type: catType,
-		UserId: userId,
+		Id:        shortuuid.New(),
+		Name:      name,
+		Type:      catType,
+		UserId:    userId,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}

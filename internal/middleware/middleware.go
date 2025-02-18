@@ -40,7 +40,7 @@ func LogRequest(next http.Handler) http.Handler {
 			ResponseWriter: w,
 			statusCode:     http.StatusOK,
 		}
-		//reqId := shortuuid.New()
+		// reqId := shortuuid.New()
 		next.ServeHTTP(wrapped, r)
 		slog.Info(r.URL.Path,
 			"method", r.Method,
@@ -63,7 +63,6 @@ func EnsureAuth(next http.Handler) http.Handler {
 
 		db := r.Context().Value("db").(*sqlx.DB)
 		session, err := sessions.Fetch(cookie.Value, db)
-
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
@@ -91,6 +90,5 @@ func EnsureAuth(next http.Handler) http.Handler {
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
-
 	})
 }

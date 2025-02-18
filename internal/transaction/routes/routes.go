@@ -25,7 +25,6 @@ func AddRoutes(router *http.ServeMux) {
 }
 
 func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
@@ -39,18 +38,15 @@ func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accounts, err := accountmods.FetchAll(userId, db)
-
 	if err != nil {
 		slog.Error("Failed to fetch accounts")
 	}
 
 	transactionsPartial := transactiontemps.Transactions(groupedTransactions, accounts, "transactions")
 	templates.App("Transactions", "transactions", transactionsPartial).Render(r.Context(), w)
-
 }
 
 func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
@@ -64,38 +60,44 @@ func getTransactionsPartial(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accounts, err := accountmods.FetchAll(userId, db)
-
 	if err != nil {
 		slog.Error("Failed to fetch accounts")
 	}
 
 	transactiontemps.Transactions(groupedTransactions, accounts, "transactions").Render(r.Context(), w)
-
 }
 
 func getTransactionsUpload(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)	
-	transactiontemps.UploadPage().Render(r.Context(), w)
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	accounts, err := accountmods.FetchAll(userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	transactiontemps.UploadPage(accounts).Render(r.Context(), w)
 }
 
 func uploadTransactions(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
 	file, _, err := r.FormFile("file")
-
 	if err != nil {
 		slog.Error("Failed to get the upload file from request")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	
+
+	accountId := r.PostFormValue("account")
+
 	// TODO make into a go routine
-	services.UploadTransactions(file, userId, db)
+	services.UploadTransactions(file, userId, accountId, db)
 
 	http.Redirect(w, r, "/transactions", http.StatusSeeOther)
-
 }
 
 func getTransactionEditPartial(w http.ResponseWriter, r *http.Request) {
@@ -107,14 +109,12 @@ func getTransactionEditPartial(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("Getting transaction edit page", "transaction", transactionId)
 
 	transaction, err := models.Fetch(transactionId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	categories, err := catmods.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -132,14 +132,12 @@ func getTransactionEditPage(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("Getting transaction edit page", "transaction", transactionId)
 
 	transaction, err := models.Fetch(transactionId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	categories, err := catmods.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -153,29 +151,26 @@ func getTransactionEditPage(w http.ResponseWriter, r *http.Request) {
 
 func updateTransaction(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)
-	
+
 	transactionId := r.PathValue("transaction_id")
 	description := r.PostFormValue("description")
 	categoryId := r.PostFormValue("category")
 
 	transaction, err := models.Fetch(transactionId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	_, err = catmods.Fetch(categoryId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	transaction.Description = description
-	transaction.CategoryId = sql.NullString{String: categoryId,Valid: true}
+	transaction.CategoryId = sql.NullString{String: categoryId, Valid: true}
 	err = transaction.Save(db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -183,5 +178,4 @@ func updateTransaction(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("HX-Redirect", "/transactions")
 	w.WriteHeader(http.StatusOK)
-	
 }

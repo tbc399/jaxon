@@ -17,23 +17,23 @@ import (
 )
 
 type Transaction struct {
-	Id           string
-	//SourceHash   sql.NullInt64 `db:"source_hash"`
-	UserId       string        `db:"user_id"`
-	//User         users.User
-	AccountId    sql.NullString `db:"account_id"`
-	OrigDescription string `db:"orig_description"`
-	Description  string
-	OrigAmount int `db:"orig_amount"`
-	Amount       int            // transaction in cents
-	CategoryId   sql.NullString `db:"category_id"`
-	//CategoryName string         `db:"category_name"`
-	OrigDate         time.Time `db:"orig_date"`
-	Date         time.Time
-	Notes        sql.NullString
-	Hidden       bool
-	CreatedAt    time.Time `db:"created_at"`
-	UpdatedAt    time.Time `db:"updated_at"`
+	Id string
+	// SourceHash   sql.NullInt64 `db:"source_hash"`
+	UserId string `db:"user_id"`
+	// User         users.User
+	AccountId       sql.NullString `db:"account_id"`
+	OrigDescription string         `db:"orig_description"`
+	Description     string
+	OrigAmount      int            `db:"orig_amount"`
+	Amount          int            // transaction in cents
+	CategoryId      sql.NullString `db:"category_id"`
+	// CategoryName string         `db:"category_name"`
+	OrigDate  time.Time `db:"orig_date"`
+	Date      time.Time
+	Notes     sql.NullString
+	Hidden    bool
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (self *Transaction) Save(db *sqlx.DB) error {
@@ -84,22 +84,22 @@ func (self *Transaction) Save(db *sqlx.DB) error {
 func NewTransaction(userId, accountId, description string, date time.Time, amount int) *Transaction {
 	now := time.Now().UTC()
 	return &Transaction{
-		Id: "",
+		Id:     "",
 		UserId: userId,
-		//User: users.User{},
-		AccountId: sql.NullString{String: accountId, Valid: false},
+		// User: users.User{},
+		AccountId:       sql.NullString{String: accountId, Valid: false},
 		OrigDescription: description,
-		Description:  description,
-		OrigAmount: amount,
-		Amount:       amount,
-		CategoryId:   sql.NullString{Valid: false},
-		//CategoryName: "",
-		OrigDate: date,
-		Date:         date,
-		Notes:        sql.NullString{Valid: false},
-		Hidden:       false,
-		CreatedAt:    now,
-		UpdatedAt:    now,
+		Description:     description,
+		OrigAmount:      amount,
+		Amount:          amount,
+		CategoryId:      sql.NullString{Valid: false},
+		// CategoryName: "",
+		OrigDate:  date,
+		Date:      date,
+		Notes:     sql.NullString{Valid: false},
+		Hidden:    false,
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 }
 
@@ -107,8 +107,8 @@ type TransactionView struct {
 	Id           string
 	Description  string
 	Amount       int            // transaction in cents
-	CategoryId sql.NullString `db:"category_id"`
-	CategoryName sql.NullString         `db:"category_name"`
+	CategoryId   sql.NullString `db:"category_id"`
+	CategoryName sql.NullString `db:"category_name"`
 	Date         time.Time
 	Notes        sql.NullString
 	Hidden       bool
@@ -147,7 +147,6 @@ func Fetch(id string, db *sqlx.DB) (*Transaction, error) {
 }
 
 func CreateMany(transactions []Transaction, db *sqlx.DB) error {
-
 	if len(transactions) == 0 {
 		return nil
 	}
@@ -170,7 +169,7 @@ func CreateMany(transactions []Transaction, db *sqlx.DB) error {
 			columnNames = append(columnNames, strings.ToLower(field.Name))
 		}
 	}
-	
+
 	sqls := fmt.Sprintf(
 		"INSERT INTO transactions (%s) VALUES (:%s)",
 		strings.Join(columnNames, ", "),
@@ -190,7 +189,4 @@ func CreateMany(transactions []Transaction, db *sqlx.DB) error {
 	}
 
 	return nil
-
 }
-
-

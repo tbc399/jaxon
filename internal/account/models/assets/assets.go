@@ -40,7 +40,6 @@ func NewAsset(name string, assetType string, userId string, lastSync time.Time) 
 }
 
 func FetchAll(userId string, db *sqlx.DB) ([]Asset, error) {
-
 	sqls := "SELECT * FROM assets WHERE user_id = $1"
 	assets := []Asset{}
 	err := db.Select(&assets, sqls, userId)

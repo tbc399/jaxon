@@ -15,14 +15,14 @@ import (
 )
 
 type Budget struct {
-	Id string
+	Id       string
 	PeriodId string `db:"period_id"`
-	UserId string `db:"user_id"`
-	//User users.User
+	UserId   string `db:"user_id"`
+	// User users.User
 	CategoryId string `db:"category_id"`
-	//Category 
-	Amount uint64
-	Rollover bool
+	// Category
+	Amount    uint64
+	Rollover  bool
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 }
@@ -30,14 +30,14 @@ type Budget struct {
 func NewBudget(periodId, userId, categoryId string, amount uint64) *Budget {
 	now := time.Now().UTC()
 	return &Budget{
-		Id: shortuuid.New(),
-		PeriodId: periodId,
-		UserId: userId,
+		Id:         shortuuid.New(),
+		PeriodId:   periodId,
+		UserId:     userId,
 		CategoryId: categoryId,
-		Amount: amount,
-		Rollover: false,
-		CreatedAt: now,
-		UpdatedAt: now,
+		Amount:     amount,
+		Rollover:   false,
+		CreatedAt:  now,
+		UpdatedAt:  now,
 	}
 }
 
@@ -74,24 +74,21 @@ func (self *Budget) Save(db *sqlx.DB) error {
 	return nil
 }
 
-
-
-func (self *Budget) RolloverNew(period *BudgetPeriod) (*Budget) {
+func (self *Budget) RolloverNew(period *BudgetPeriod) *Budget {
 	now := time.Now().UTC()
 	return &Budget{
-		Id: shortuuid.New(),
-		PeriodId: period.Id,
-		UserId: self.UserId,
+		Id:         shortuuid.New(),
+		PeriodId:   period.Id,
+		UserId:     self.UserId,
 		CategoryId: self.CategoryId,
-		Amount: self.Amount,
-		Rollover: self.Rollover,
-		CreatedAt: now,
-		UpdatedAt: now,
+		Amount:     self.Amount,
+		Rollover:   self.Rollover,
+		CreatedAt:  now,
+		UpdatedAt:  now,
 	}
 }
 
 func SaveMany(budgets []Budget, db *sqlx.DB) error {
-
 	if len(budgets) == 0 {
 		return nil
 	}
@@ -108,7 +105,7 @@ func SaveMany(budgets []Budget, db *sqlx.DB) error {
 			columnNames = append(columnNames, strings.ToLower(field.Name))
 		}
 	}
-	
+
 	sqls := fmt.Sprintf(
 		"INSERT INTO budgets (%s) VALUES (:%s)",
 		strings.Join(columnNames, ", "),
@@ -130,15 +127,14 @@ func SaveMany(budgets []Budget, db *sqlx.DB) error {
 	return nil
 }
 
-
 type BudgetView struct {
-	Id string
+	Id     string
 	UserId string `db:"user_id"`
-	//User users.User
-	CategoryId string `db:"category_id"`
+	// User users.User
+	CategoryId   string `db:"category_id"`
 	CategoryName string `db:"category_name"`
-	//Category 
-	Amount int
+	// Category
+	Amount            int
 	TransactionsTotal int `db:"transactions_total"`
 }
 
@@ -170,24 +166,23 @@ func FetchBudgetViewsByMonth(userId string, year int, month time.Month, db *sqlx
 }
 
 type BudgetPeriod struct {
-	Id string
-	UserId string `db:"user_id"`
-	Start time.Time
-	End time.Time
+	Id        string
+	UserId    string `db:"user_id"`
+	Start     time.Time
+	End       time.Time
 	CreatedAt time.Time `db:"created_at"`
 }
 
 func NewBudgetPeriod(userId string, start, end time.Time) *BudgetPeriod {
 	now := time.Now().UTC()
 	return &BudgetPeriod{
-		Id:              shortuuid.New(),
-		UserId:          userId,
-		Start: start,
-		End: end,
-		CreatedAt:       now,
+		Id:        shortuuid.New(),
+		UserId:    userId,
+		Start:     start,
+		End:       end,
+		CreatedAt: now,
 	}
 }
-
 
 func (self *BudgetPeriod) Save(db *sqlx.DB) (*BudgetPeriod, error) {
 	sqls := `INSERT INTO budget_periods (id, user_id, start, "end", created_at) VALUES (:id, :user_id, :start, :end, :created_at)`
@@ -240,11 +235,10 @@ func (self *BudgetPeriod) FetchBudgets(db *sqlx.DB) ([]Budget, error) {
 }
 
 func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
-	now := time.Now().UTC()
-	sqls := `SELECT bp.* FROM budget_periods AS bp LEFT JOIN users AS u ON bp.user_id = u.id WHERE u.active = true AND bp.end > $1`
+	sqls := `SELECT DISTINCT ON (bp.user_id) bp.* FROM budget_periods AS bp LEFT JOIN users AS u ON bp.user_id = u.id WHERE u.active = true ORDER BY bp.user_id, bp.end DESC`
 	slog.Info("Executing sql", "sql", sqls)
 	rollovers := []BudgetPeriod{}
-	err := db.Select(&rollovers, sqls, now)
+	err := db.Select(&rollovers, sqls)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			slog.Warn("Failed to fetch budget periods", "error", err.Error())
@@ -255,6 +249,3 @@ func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 	}
 	return rollovers, nil
 }
-
-
-

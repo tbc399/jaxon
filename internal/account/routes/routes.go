@@ -20,7 +20,6 @@ func AddRoutes(router *http.ServeMux) {
 }
 
 func groupAccounts(accounts []accountModels.Account) map[string][]accountModels.Account {
-
 	accountMap := make(map[string][]accountModels.Account)
 
 	translate := map[string]string{
@@ -44,12 +43,10 @@ func groupAccounts(accounts []accountModels.Account) map[string][]accountModels.
 }
 
 func getAccountsFullPage(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
 	accounts, err := accountModels.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -66,16 +63,13 @@ func getAccountsFullPage(w http.ResponseWriter, r *http.Request) {
 		"accounts",
 		accountsPartial,
 	).Render(r.Context(), w)
-
 }
 
 func getAssetsFullPage(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
 	assets, err := assetModels.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -88,11 +82,9 @@ func getAssetsFullPage(w http.ResponseWriter, r *http.Request) {
 		"accounts",
 		assetsPartial,
 	).Render(r.Context(), w)
-
 }
 
 func getAccountsPartialPage(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
@@ -108,11 +100,9 @@ func getAccountsPartialPage(w http.ResponseWriter, r *http.Request) {
 	stripePubKey := os.Getenv("STRIPE_PUB_KEY")
 	accountsTab := accountsTemplates.AccountsTab(acctMap, stripePubKey)
 	accountsTemplates.Accounts(accountsTab, "accounts").Render(r.Context(), w)
-
 }
 
 func getAccountsTab(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
@@ -128,21 +118,17 @@ func getAccountsTab(w http.ResponseWriter, r *http.Request) {
 	stripePubKey := os.Getenv("STRIPE_PUB_KEY")
 
 	accountsTemplates.AccountsTab(acctMap, stripePubKey).Render(r.Context(), w)
-
 }
 
 func getAssetsTab(w http.ResponseWriter, r *http.Request) {
-
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
 	assets, err := assetModels.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	accountsTemplates.AssetsTab(assets).Render(r.Context(), w)
-
 }

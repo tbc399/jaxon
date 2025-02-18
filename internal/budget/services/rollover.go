@@ -22,12 +22,12 @@ func Rollover(ctx context.Context, db *sqlx.DB) {
 
 		periodUserIds := []string{}
 
-		for _, r := range(periods) {
+		for _, r := range periods {
 			periodUserIds = append(periodUserIds, r.UserId)
 		}
 
 		now := time.Now().UTC()
-		for _, period := range(periods) {
+		for _, period := range periods {
 			if period.End.Before(now) {
 				slog.Info("Starting a budget period rollover", "user", period.UserId, "period", period.Id)
 				start := period.Start.AddDate(0, 1, 0)
@@ -39,7 +39,7 @@ func Rollover(ctx context.Context, db *sqlx.DB) {
 				}
 
 				newBudgets := []budgets.Budget{}
-				for _, budget := range(previousBudgets) {
+				for _, budget := range previousBudgets {
 					newBudgets = append(newBudgets, *budget.RolloverNew(newPeriod))
 				}
 
@@ -51,5 +51,4 @@ func Rollover(ctx context.Context, db *sqlx.DB) {
 		}
 
 	}
-
 }

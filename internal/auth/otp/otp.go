@@ -2,11 +2,12 @@ package otp
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
-	"github.com/lithammer/shortuuid/v4"
 	"log/slog"
 	"math/rand/v2"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/lithammer/shortuuid/v4"
 )
 
 type OneTimePass struct {
@@ -44,7 +45,7 @@ func Create(email string, db *sqlx.DB) (*OneTimePass, error) {
 	slog.Info("Creating one time passcode")
 	sql := "INSERT INTO otp (id, magic_token, code, email, expiry, created_at, invalidated) VALUES (:id, :magic_token, :code, :email, :expiry, :created_at, :invalidated)"
 	tx := db.MustBegin()
-	//var err error
+	// var err error
 	_, err := tx.NamedExec(sql, otpass)
 	if err != nil {
 		slog.Error(err.Error())

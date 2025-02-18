@@ -14,9 +14,9 @@ type User struct {
 	Id               string
 	Email            string
 	StripeCustomerId sql.NullString `db:"stripe_customer_id"`
-	Active bool
-	CreatedAt        time.Time      `db:"created_at"`
-	UpdatedAt        time.Time      `db:"updated_at"`
+	Active           bool
+	CreatedAt        time.Time `db:"created_at"`
+	UpdatedAt        time.Time `db:"updated_at"`
 }
 
 func New(email string) *User {
@@ -24,7 +24,7 @@ func New(email string) *User {
 	return &User{
 		Id:        shortuuid.New(),
 		Email:     email,
-		Active: true,
+		Active:    true,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
@@ -76,4 +76,4 @@ func FetchMany(db *sqlx.DB) ([]User, error) {
 		return nil, err
 	}
 	return users, nil
-}	
+}

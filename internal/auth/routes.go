@@ -88,7 +88,6 @@ func checkLoginStatus(w http.ResponseWriter, r *http.Request) {
 	slog.Info("Checking for active session", "otp", otpass.Id, "email", otpass.Email)
 
 	session, err := sessions.FetchByOtpId(otpass.Id, db)
-
 	if err != nil {
 		// user has not completed login flow
 		slog.Info("Failed to get session", "error", err.Error())
@@ -141,7 +140,6 @@ func submitOtpValidation(w http.ResponseWriter, r *http.Request) {
 
 	slog.Debug("Looking for existing user", "email", otpass.Email)
 	user, err := users.FetchByEmail(otpass.Email, db)
-
 	if err != nil {
 		// TODO: return something to the user
 		w.WriteHeader(http.StatusInternalServerError)
@@ -154,10 +152,10 @@ func submitOtpValidation(w http.ResponseWriter, r *http.Request) {
 		slog.Info("New user created", "email", otpass.Email)
 
 		// TODO: This should probably happen in a background task unless asyncio.Queue handles it
-		//go lucy.publish(UserCreated(user_id=user.id, db=db))
+		// go lucy.publish(UserCreated(user_id=user.id, db=db))
 
 		// TODO: should this be an event handler to let the response come back timely?
-		//go stripe.Customer.create_async(name="", email=user.email)
+		// go stripe.Customer.create_async(name="", email=user.email)
 	}
 
 	session := sessions.New(user.Id, otpass.Id)

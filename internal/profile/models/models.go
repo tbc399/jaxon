@@ -8,10 +8,10 @@ import (
 )
 
 type Profile struct {
-	Id string
-	First            sql.NullString
-	Last             sql.NullString
-	UserId string
+	Id        string
+	First     sql.NullString
+	Last      sql.NullString
+	UserId    string
 	CreatedAt string
 	UdpatedAt string
 }
@@ -22,7 +22,7 @@ func NewProfile() *Profile {
 
 func Fetch(userId string, db *sqlx.DB) (*Profile, error) {
 	sqls := "SELECT * FROM profiles WHERE id = $1"
-	slog.Info("Executing sql", "sql", sqls) 
+	slog.Info("Executing sql", "sql", sqls)
 	profile := Profile{}
 	err := db.Get(&profile, sqls, userId)
 	if err != nil {

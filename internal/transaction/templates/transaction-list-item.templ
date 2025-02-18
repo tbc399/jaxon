@@ -3,10 +3,11 @@ package templates
 import (
 	"fmt"
 	"jaxon.app/jaxon/internal/transaction/models"
+	"github.com/dustin/go-humanize"
 )
 
 func styleAmount(amount int) string {
-	style := "whitespace-nowrap text-sm font-semibold"
+	style := "flex h-full items-start text-sm font-medium"
 	if amount > 0 {
 		return style + " text-teal-700"
 	}
@@ -19,7 +20,7 @@ templ transactionListItem(transaction models.TransactionView) {
         hx-push-url={ fmt.Sprintf("/transactions/%s", transaction.Id) }
 		hx-swap="none"
 		id={ fmt.Sprintf("tran_%s", transaction.Id) }
-		class="flex flex-row justify-between items-center dark:hover:bg-slate-800/50 w-full rounded-2xl px-3 py-3"
+		class="flex flex-row justify-between dark:hover:bg-slate-800/50 w-full rounded-2xl px-3 py-3"
 	>
         <div class="flex flex-col gap-y-0.5">
             <div class="whitespace-nowrap dark:text-gray-100 overflow-ellipsis overflow-x-hidden text-sm font-semibold">
@@ -33,28 +34,15 @@ templ transactionListItem(transaction models.TransactionView) {
                 }
             </div>
         </div>
-        <div class="flex flex-col">
+        <div class="flex items-start h-full">
             <div class={ styleAmount(transaction.Amount) }>
                 <span class="w-full flex justify-end">
                     if transaction.Amount > 0 {
-                        +{ fmt.Sprintf("%0.2f", float32(transaction.Amount) / 100.0) }
+                        +${ fmt.Sprint(humanize.FormatFloat("", float64(transaction.Amount) / 100.0)) }
                     } else {
-                        { fmt.Sprintf("%0.2f", float32(transaction.Amount) / 100.0) }
+                        -${ fmt.Sprint(humanize.FormatFloat("", float64(transaction.Amount) / 100.0 * -1)) }
                     }
                 </span>
-            </div>
-            <div class="whitespace-nowrap dark:text-gray-400">
-                -
-            </div>
-            <div class="whitespace-nowrap font-bold text-teal-700 dark:text-teal-700">
-                <button
-                    hx-target={ fmt.Sprintf("#tran_%s", transaction.Id) }
-                    hx-swap="beforeend"
-                    hx-get={ string(templ.URL(fmt.Sprintf("/transactions/%s/edit", transaction.Id))) }
-                    class="dark:hover:text-teal-800 hidden"
-                >
-                    Edit
-                </button>
             </div>
         </div>
 	</div>

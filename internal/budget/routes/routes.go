@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -20,9 +21,9 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /budgets", createBudget)
 	router.HandleFunc("GET /budgets/categories", getCategoriesPage)
 	router.HandleFunc("POST /budgets/categories", createCategory)
-	//router.HandleFunc("GET /budgets/{id}/edit", getBudgetEditPartial)
+	// router.HandleFunc("GET /budgets/{id}/edit", getBudgetEditPartial)
 	router.HandleFunc("GET /budgets/{id}", getBudgetEditPage)
-	//router.HandleFunc("PUT /budgets/{id}", updateBudget)
+	// router.HandleFunc("PUT /budgets/{id}", updateBudget)
 }
 
 func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +32,6 @@ func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now().UTC()
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -39,7 +39,6 @@ func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
 
 	budgetPartial := budgettemps.Budgets(budgets, "budgets")
 	templates.App("Budgets", "budgets", budgetPartial).Render(r.Context(), w)
-
 }
 
 func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
@@ -48,6 +47,10 @@ func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now().UTC()
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
+
+	for _, budget := range budgets {
+		fmt.Println(budget.TransactionsTotal)
+	}
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -144,7 +147,6 @@ func getCategoriesPage(w http.ResponseWriter, r *http.Request) {
 
 	hxRequest := r.Header.Get("Hx-Request")
 	cats, err := catmods.FetchAll(userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -165,7 +167,6 @@ func createCategory(w http.ResponseWriter, r *http.Request) {
 	catName := r.PostFormValue("category")
 
 	existingCat, err := catmods.FetchByName(catName, userId, db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -179,7 +180,6 @@ func createCategory(w http.ResponseWriter, r *http.Request) {
 
 	cat := catmods.NewCategory(catName, catmods.ExpenseCategoryType, userId)
 	err = cat.Save(db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
