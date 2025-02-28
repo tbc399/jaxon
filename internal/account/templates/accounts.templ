@@ -10,86 +10,84 @@ func tabStyling(activeTab string, expected string) string {
 
 // Full page reload for accounts menu selection
 templ Accounts(accountsTabSection templ.Component, activeTab string) {
-	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col h-full items-center overflow-y-auto">
-		<div class="w-full pt-16">
-			<div class="flex justify-between mb-7">
-				<h1 class="font-semibold text-3xl text-slate-300">Connections</h1>
-			</div>
-			<div class="w-full flex flex-row justify-between items-center gap-x-2 border-b border-gray-800">
-				<div id="accounts-tab-group" hx-target="#accounts-tab-list" hx-swap="outerHTML" class="flex h-full">
-					<script>
-                        // Tab selection changing
-                        htmx.on("#accounts-tab-group", "htmx:beforeRequest", function(event) {
-                          let currentTab = document.querySelector('.tab-active');
-                          currentTab.classList.remove('tab-active');
-                          currentTab.classList.add('tab');
-                          let newTab = event.target;
-                          newTab.classList.remove('tab');
-                          newTab.classList.add('tab-active');
-                        })
-                    </script>
-					<button
-						id="accounts-tab"
-						hx-get="/accounts/accounts-tab"
-						hx-push-url="/accounts"
-						class={ tabStyling(activeTab, "accounts") }
-					>
-						Accounts
-					</button>
-					<button
-						id="assets-tab"
-						hx-get="/accounts/assets-tab"
-						hx-push-url="/accounts/assets"
-						class={ tabStyling(activeTab, "assets") }
-					>
-						Assets
-					</button>
-				</div>
-				<button
-					id="add-account-button"
-					type="button"
-					title="Connect new account"
-					class="hidden py-1.5 ps-3 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md
-                      text-gray-100 bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
-                      disabled:pointer-events-none"
-				>
-					<svg viewBox="0 0 24 24" class="size-3 fill-none stroke-2 stroke-slate-100">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-					</svg>
-					Add account
-				</button>
-				/*
-				<script>
-                  htmx.on("#add-account-button", "click",
-                    async function(evt) {
-                      fetch("/accounts/connect")
-                        .then(async function(response) {
-                          return response.json();
-                        }).then(async function(json) {
-                          const stripe = new Stripe("{{ stripe_pub_key }}");
-                          const sessionResult = await stripe.collectFinancialConnectionsAccounts({
-                            clientSecret: json["client_secret"]
-                          }).then(async function(result) {
-                            if (result.error) {
-                              // Inform the customer that there was an error.
-                              console.log(result.error.message);
-                            // Handle next step based on length of accounts array
-                            } else if (result.financialConnectionsSession.accounts.length === 0) {
-                              console.log('No accounts were linked');
-                            } else {
-                              //console.log(result.financialConnectionsSession.accounts)
-                              event = new CustomEvent("accountsLinked")
-                              e = document.getElementById("accounts-tab-list")
-                              e.dispatchEvent(event)
-                            }
-                          });
-                        });
-                    }
-                  );
+	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full h-full items-center justify-center pt-8 px-16">
+        <div class="flex flex-row justify-start w-full mb-4 py-2">
+            <h1 class="font-medium text-xl text-gray-100">Connections</h1>
+        </div>
+        <div class="w-full flex flex-row justify-between items-center gap-x-2 border-b border-gray-800">
+            <div id="accounts-tab-group" hx-target="#accounts-tab-list" hx-swap="outerHTML" class="flex h-full">
+                <script>
+                    // Tab selection changing
+                    htmx.on("#accounts-tab-group", "htmx:beforeRequest", function(event) {
+                      let currentTab = document.querySelector('.tab-active');
+                      currentTab.classList.remove('tab-active');
+                      currentTab.classList.add('tab');
+                      let newTab = event.target;
+                      newTab.classList.remove('tab');
+                      newTab.classList.add('tab-active');
+                    })
                 </script>
-                */
-			</div>
-			@accountsTabSection
-		</div>
+                <button
+                    id="accounts-tab"
+                    hx-get="/accounts/accounts-tab"
+                    hx-push-url="/accounts"
+                    class={ tabStyling(activeTab, "accounts") }
+                >
+                    Accounts
+                </button>
+                <button
+                    id="assets-tab"
+                    hx-get="/accounts/assets-tab"
+                    hx-push-url="/accounts/assets"
+                    class={ tabStyling(activeTab, "assets") }
+                >
+                    Assets
+                </button>
+            </div>
+            <button
+                id="add-account-button"
+                type="button"
+                title="Connect new account"
+                class="hidden py-1.5 ps-3 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md
+                  text-gray-100 bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
+                  disabled:pointer-events-none"
+            >
+                <svg viewBox="0 0 24 24" class="size-3 fill-none stroke-2 stroke-slate-100">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+                </svg>
+                Add account
+            </button>
+            /*
+            <script>
+              htmx.on("#add-account-button", "click",
+                async function(evt) {
+                  fetch("/accounts/connect")
+                    .then(async function(response) {
+                      return response.json();
+                    }).then(async function(json) {
+                      const stripe = new Stripe("{{ stripe_pub_key }}");
+                      const sessionResult = await stripe.collectFinancialConnectionsAccounts({
+                        clientSecret: json["client_secret"]
+                      }).then(async function(result) {
+                        if (result.error) {
+                          // Inform the customer that there was an error.
+                          console.log(result.error.message);
+                        // Handle next step based on length of accounts array
+                        } else if (result.financialConnectionsSession.accounts.length === 0) {
+                          console.log('No accounts were linked');
+                        } else {
+                          //console.log(result.financialConnectionsSession.accounts)
+                          event = new CustomEvent("accountsLinked")
+                          e = document.getElementById("accounts-tab-list")
+                          e.dispatchEvent(event)
+                        }
+                      });
+                    });
+                }
+              );
+            </script>
+            */
+        </div>
+        @accountsTabSection
 	</div>
 }

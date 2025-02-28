@@ -1,4 +1,4 @@
 <div id=\"transactions-tab-list\" class=\"flex flex-row w-full justify-center h-full\"><div class=\"rounded-md min-w-full\"><div class=\"w-full\"><div class=\"\">
-<div class=\"text-sm text-gray-500 font-medium ps-2 pt-5 pb-1\">
+<div class=\"flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1\">
 </div>
 </div></div></div></div>

@@ -15,7 +15,7 @@ templ transactionsPartial(transactions []interface{}) {
 				<div class="">
 					for _, transaction := range transactions {
                         if isDate(transaction) {
-                            <div class="text-sm text-gray-500 font-medium ps-2 pt-5 pb-1">
+                            <div class="flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1">
                                 { transaction.(time.Time).Format("January 02, 2006") }
                             </div>
                         } else {

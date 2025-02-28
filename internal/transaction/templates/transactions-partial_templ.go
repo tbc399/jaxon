@@ -43,7 +43,7 @@ func transactionsPartial(transactions []interface{}) templ.Component {
 		}
 		for _, transaction := range transactions {
 			if isDate(transaction) {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"text-sm text-gray-500 font-medium ps-2 pt-5 pb-1\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

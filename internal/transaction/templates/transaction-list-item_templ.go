@@ -15,11 +15,11 @@ import (
 )
 
 func styleAmount(amount int) string {
-	style := "flex h-full items-start text-sm font-medium"
+	style := "flex h-full items-start text-sm font-normal"
 	if amount > 0 {
 		return style + " text-teal-700"
 	}
-	return style + " dark:text-gray-100"
+	return style + " dark:text-gray-200"
 }
 
 func transactionListItem(transaction models.TransactionView) templ.Component {

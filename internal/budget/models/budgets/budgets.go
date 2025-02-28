@@ -15,16 +15,14 @@ import (
 )
 
 type Budget struct {
-	Id       string
-	PeriodId string `db:"period_id"`
-	UserId   string `db:"user_id"`
-	// User users.User
+	Id         string
+	PeriodId   string `db:"period_id"`
+	UserId     string `db:"user_id"`
 	CategoryId string `db:"category_id"`
-	// Category
-	Amount    uint64
-	Rollover  bool
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
+	Amount     uint64
+	Rollover   bool
+	CreatedAt  time.Time `db:"created_at"`
+	UpdatedAt  time.Time `db:"updated_at"`
 }
 
 func NewBudget(periodId, userId, categoryId string, amount uint64) *Budget {
@@ -128,14 +126,28 @@ func SaveMany(budgets []Budget, db *sqlx.DB) error {
 }
 
 type BudgetView struct {
-	Id     string
-	UserId string `db:"user_id"`
-	// User users.User
-	CategoryId   string `db:"category_id"`
-	CategoryName string `db:"category_name"`
-	// Category
+	Id                string
+	UserId            string `db:"user_id"`
+	CategoryId        string `db:"category_id"`
+	CategoryName      string `db:"category_name"`
 	Amount            int
 	TransactionsTotal int `db:"transactions_total"`
+}
+
+func FetchBudget(id, userId string, db *sqlx.DB) (*Budget, error) {
+	sqls := `SELECT * FROM budgets WHERE id = $1 AND user_id = $2`
+	slog.Info("Executing sql", "sql", sqls)
+	budget := new(Budget)
+	err := db.Get(budget, sqls, id, userId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch budget", "budget_id", id, "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch budgets", "budget_id", id, "error", err.Error())
+		return nil, err
+	}
+	return budget, nil
 }
 
 func FetchBudgetViewsByMonth(userId string, year int, month time.Month, db *sqlx.DB) ([]BudgetView, error) {
@@ -248,4 +260,9 @@ func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 		return nil, err
 	}
 	return rollovers, nil
+}
+
+type BudgetOverview struct {
+	ExpectedIncome int
+
 }

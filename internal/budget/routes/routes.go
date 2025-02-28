@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -21,9 +20,9 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /budgets", createBudget)
 	router.HandleFunc("GET /budgets/categories", getCategoriesPage)
 	router.HandleFunc("POST /budgets/categories", createCategory)
-	// router.HandleFunc("GET /budgets/{id}/edit", getBudgetEditPartial)
-	router.HandleFunc("GET /budgets/{id}", getBudgetEditPage)
-	// router.HandleFunc("PUT /budgets/{id}", updateBudget)
+	router.HandleFunc("GET /budgets/{id}", getBudgetDetailPage)
+	router.HandleFunc("DELETE /budgets/{id}", removeBudget)
+	router.HandleFunc("PUT /budgets/{id}", updateBudget)
 }
 
 func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +31,7 @@ func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now().UTC()
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -48,9 +48,7 @@ func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
 	now := time.Now().UTC()
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
 
-	for _, budget := range budgets {
-		fmt.Println(budget.TransactionsTotal)
-	}
+	//overview, err := budgetmods.FetchBudgetOverview(userId, now.Year(), now.Month(), db)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -79,9 +77,24 @@ func getBudgetCreatePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getBudgetEditPage(w http.ResponseWriter, r *http.Request) {
+func removeBudget(w http.ResponseWriter, r *http.Request) {
+	//db := r.Context().Value("db").(*sqlx.DB)
+	//userId := r.Context().Value("userId").(string)
+	
+
+}
+
+func getBudgetDetailPage(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
+
+	budgetId := r.PathValue("id")
+
+	budget, err := budgetmods.FetchBudget(budgetId, userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 
 	hxRequest := r.Header.Get("Hx-Request")
 
@@ -91,10 +104,10 @@ func getBudgetEditPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if hxRequest == "true" {
-		budgettemps.BudgetCreate(categories).Render(r.Context(), w)
+		budgettemps.BudgetDetail(budget, categories).Render(r.Context(), w)
 	} else {
-		createPartial := budgettemps.BudgetCreate(categories)
-		templates.App("Create Budget", "budgets", createPartial).Render(r.Context(), w)
+		updatePartial := budgettemps.BudgetDetail(budget, categories)
+		templates.App("Budget Detail", "budgets", updatePartial).Render(r.Context(), w)
 	}
 }
 
@@ -137,6 +150,40 @@ func createBudget(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	http.Redirect(w, r, "/budgets", http.StatusSeeOther)
+}
+
+func updateBudget(w http.ResponseWriter, r *http.Request) {
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	budgetId := r.PathValue("id")
+	//categoryId := r.PostFormValue("category")
+
+	amount, err := strconv.ParseUint(r.PostFormValue("amount"), 10, 0)
+	if err != nil {
+		slog.Error("Failed to parse amount", "amount", r.PostFormValue("amount"))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	/*
+	category, err := catmods.Fetch(categoryId, db)
+	if category == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	*/
+
+	budget, err := budgetmods.FetchBudget(budgetId, userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	budget.Amount = amount
+	err = budget.Save(db)
 
 	http.Redirect(w, r, "/budgets", http.StatusSeeOther)
 }
