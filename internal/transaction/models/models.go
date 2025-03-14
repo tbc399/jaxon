@@ -7,11 +7,13 @@ import (
 	"log/slog"
 	"reflect"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lithammer/shortuuid/v4"
+	"jaxon.app/jaxon/internal/budget/models/budgets"
 	//"jaxon.app/jaxon/internal/auth/users"
 	//"jaxon.app/jaxon/internal/auth/users"
 )
@@ -144,6 +146,23 @@ func Fetch(id string, db *sqlx.DB) (*Transaction, error) {
 		return nil, err
 	}
 	return transaction, nil
+}
+
+func SumInPeriod(userId string, period *budgets.BudgetPeriod, db *sqlx.DB) (int64, error) {
+	sqls := `SELECT COALESCE(SUM(amount), 0) FROM transactions AS t LEFT JOIN categories AS c ON t.category_id = c.id WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3 AND c.type = 'expense'`
+	slog.Info("Executing sql", "sql", sqls)
+	var amount int64
+	err := db.Get(&amount, sqls, userId, period.Start, period.End)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to sum transactions for period", "user", userId, "period", period, "error", err.Error())
+			return 0, nil
+		}
+		slog.Error("Failed to sum transactions for period", "user", userId, "period", period, "error", err.Error())
+		return 0, err
+	}
+	slog.Info(strconv.FormatInt(amount, 10))
+	return amount, nil
 }
 
 func CreateMany(transactions []Transaction, db *sqlx.DB) error {

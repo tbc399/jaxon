@@ -3,76 +3,68 @@ package templates
 import (
 	"jaxon.app/jaxon/internal/budget/models/budgets"
 	//"jaxon.app/jaxon/internal/templates"
+	"jaxon.app/jaxon/internal/budget/services"
+	"github.com/dustin/go-humanize"
+	"fmt"
 )
 
-templ Budgets(budgets []budgets.BudgetView, activeTab string) {
+func budgetProgress(lhs, rhs int64) string {
+    return fmt.Sprintf("width: %d%%", int(float64(lhs) / float64(rhs) * 100))
+}
+
+templ Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, activeTab string) {
 	<!-- Budget Tab Bar -->
-	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full justify-center items-center h-full pt-8 px-16">
+	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full justify-center items-center h-full pt-8 px-32">
         <div class="flex flex-row justify-start w-full py-2 mb-4">
             <h1 class="font-medium text-xl text-gray-100">Budgets</h1>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-2 px-0.5 w-full">
+        //<div class="p-2 mb-8 w-full rounded-xl ring-1 dark:ring-slate-700/50 dark:bg-slate-800/50">
+        <div class="mb-8 w-full">
             <div
                 id="income-section"
-                class="group flex flex-col justify-between w-full p-1 rounded-xl dark:bg-slate-800/50 ring-1 dark:ring-slate-700/50 min-h-16"
+                class="group flex flex-col justify-between w-full min-h-16"
             >
-                <div class="rounded-lg dark:bg-gray-900 pb-4">
-                    <div class="flex flex-col justify-between w-full py-2 px-3">
+                <div class="rounded-lg pb-4">
+                    <div class="flex flex-col justify-between w-full py-2">
                         <div class="flex flex-row justify-between w-full">
                             <div>
-                                <span class="text-sm font-normal text-white">Income</span>
+                                <span class="text-sm text-white">Income</span>
                             </div>
                             <div class="">
                                 <span class="text-sm font-medium text-white">
-                                    <span class="font-normal text-xs text-teal-700 me-0.5">$</span><span class="text-xs font-normal">4,800</span>
+                                    <span class="font-normal text-xs text-teal-700 me-0.5">$</span><span class="text-xs font-normal">{ humanize.Comma(overview.CurrentIncome) }</span>
                                     <span class="italic text-xs dark:text-gray-400">of</span>
-                                    <span class="font-normal text-sm text-teal-700 me-0.5">$</span>9,900
+                                    <span class="font-normal text-sm text-teal-700 me-0.5">$</span>{ humanize.Comma(overview.ExpectedIncome) }
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex w-auto h-1.5 mx-3 dark:bg-slate-800/50 rounded-full overflow-hidden" role="progressbar">
-                        <div class="flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500" style="width: 50%;"></div>
+                    <div class="flex w-auto h-2 dark:bg-slate-800/50 rounded-sm overflow-hidden" role="progressbar">
+                        <div class="flex flex-col justify-center overflow-hidden bg-emerald-400 text-xs text-white text-center whitespace-nowrap transition duration-500" style={ budgetProgress(overview.CurrentIncome, overview.ExpectedIncome) }></div>
                     </div>
-                </div>
-                <div class="flex justify-center py-1 text-gray-900 dark:text-white text-sm gap-x-1">
-                </div>
-            </div>
-            <div
-                id="budgeted-section"
-                class="group flex flex-col justify-between w-full p-1 rounded-xl dark:bg-slate-800/50 ring-1 dark:ring-slate-700/50 min-h-16"
-            >
-                <div class="rounded-lg dark:bg-gray-900 pb-4">
-                    <div class="flex flex-col justify-between w-full py-2 px-3">
+                    <div class="flex flex-col justify-between w-full py-2 mt-2">
                         <div class="flex flex-row justify-between w-full">
                             <div>
-                                <span class="text-sm font-normal text-white">Budgeted</span>
+                                <span class="text-sm text-white">Spending</span>
                             </div>
                             <div class="">
                                 <span class="text-sm font-medium text-white">
-                                    <span class="font-normal text-xs text-teal-700 me-0.5">$</span><span class="text-xs font-normal">3,200</span>
+                                    <span class="font-normal text-xs text-teal-700 me-0.5">$</span><span class="text-xs font-normal">{ humanize.Comma(overview.CurrentSpend) }</span>
                                     <span class="italic text-xs dark:text-gray-400">of</span>
-                                    <span class="font-normal text-sm text-teal-700 me-0.5">$</span>9,900
+                                    <span class="font-normal text-sm text-teal-700 me-0.5">$</span>{ humanize.Comma(overview.ExpectedSpend) }
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex w-auto h-1.5 mx-3 dark:bg-slate-800/50 rounded-full overflow-hidden" role="progressbar">
-                        <div class="flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500" style="width: 50%;"></div>
+                    <div class="flex w-auto h-2 dark:bg-slate-800/50 rounded-sm overflow-hidden" role="progressbar">
+                        <div class="flex flex-col justify-center overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500"
+                            style={ budgetProgress(overview.CurrentSpend, overview.ExpectedSpend) }>
+                        </div>
                     </div>
-                </div>
-                <div class="flex justify-center py-1 text-gray-900 dark:text-white text-sm gap-x-1">
                 </div>
             </div>
         </div>
-		<div class="w-full flex flex-row justify-end items-center gap-x-2 mb-2">
-            /*
-			@templates.TabGroup(
-				activeTab,
-				templates.TabTempl{Name: "Budgets", HxGet: "/budgets/partial", HxPush: "/budgets"},
-				templates.TabTempl{Name: "Categories", HxGet: "/budgets/categories", HxPush: "/budgets/categories"},
-			)
-            */
+		<div class="w-full flex flex-row justify-end items-center gap-x-2 mb-3">
             <button class="flex flex-row gap-x-2 text-sm font-medium text-gray-400 hover:bg-slate-700/25 hover:text-gray-100 rounded-md px-2 py-1.5"
                 hx-get="/budgets/categories"
                 hx-push-url="budgets/categories"
@@ -86,14 +78,14 @@ templ Budgets(budgets []budgets.BudgetView, activeTab string) {
                 id="add-budget-button"
                 type="button"
                 title="Create new budget"
-                class="py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-medium rounded-md
-                      text-slate-100 bg-teal-900 active:bg-teal-900 hover:bg-teal-800 disabled:opacity-50 
+                class="py-1 ps-2 pe-3 inline-flex items-center gap-x-1 text-sm font-normal rounded-md
+                      text-white bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 
                       disabled:pointer-events-none"
                 hx-get="/budgets/create"
                 hx-push-url="/budgets/create"
                 hx-swap="none"
             >
-                <svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-[2.5px] stroke-gray-100">
+                <svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-[2.5px] stroke-white">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
                 </svg>
                 Add budget
@@ -101,31 +93,11 @@ templ Budgets(budgets []budgets.BudgetView, activeTab string) {
 		</div>
 		<!-- Budget Main Content -->
 		<div class="flex flex-row h-full w-full">
-			<div class="flex flex-col w-full">
-                <div class="flex justify-end border-b-2 border-base-100 pb-4 pt-8 w-full hidden">
-                    <button
-                        id="add-budget-button"
-                        type="button"
-                        title="Create new budget"
-                        class="hidden py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-medium rounded-md
-                              text-gray-100 bg-teal-900 active:bg-teal-900 hover:bg-teal-800 disabled:opacity-50 
-                              disabled:pointer-events-none"
-                        hx-get="/budgets/create"
-                        hx-push-url="/budgets/create"
-                        hx-swap="none"
-                    >
-                        <svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-[2.5px] stroke-gray-100">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-                        </svg>
-                        Add budget
-                    </button>
-                </div>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-2 px-0.5 w-full">
-					for _, budget := range budgets {
-						@budgetListItem(&budget)
-					}
-				</div>
-			</div>
+            <div class="flex flex-col divide-y dark:divide-slate-800/50 border-t-2 dark:border-gray-800 w-full">
+                for _, budget := range budgets {
+                    @budgetListItem(&budget)
+                }
+            </div>
 		</div>
 	</div>
 }

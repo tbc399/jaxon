@@ -11,9 +11,16 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"jaxon.app/jaxon/internal/budget/models/budgets"
 	//"jaxon.app/jaxon/internal/templates"
+	"fmt"
+	"github.com/dustin/go-humanize"
+	"jaxon.app/jaxon/internal/budget/services"
 )
 
-func Budgets(budgets []budgets.BudgetView, activeTab string) templ.Component {
+func budgetProgress(lhs, rhs int64) string {
+	return fmt.Sprintf("width: %d%%", int(float64(lhs)/float64(rhs)*100))
+}
+
+func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, activeTab string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -34,7 +41,85 @@ func Budgets(budgets []budgets.BudgetView, activeTab string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Budget Tab Bar --><div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-16\"><div class=\"flex flex-row justify-start w-full py-2 mb-4\"><h1 class=\"font-medium text-xl text-gray-100\">Budgets</h1></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-4 py-2 px-0.5 w-full\"><div id=\"income-section\" class=\"group flex flex-col justify-between w-full p-1 rounded-xl dark:bg-slate-800/50 ring-1 dark:ring-slate-700/50 min-h-16\"><div class=\"rounded-lg dark:bg-gray-900 pb-4\"><div class=\"flex flex-col justify-between w-full py-2 px-3\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm font-normal text-white\">Income</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">4,800</span> <span class=\"italic text-xs dark:text-gray-400\">of</span> <span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>9,900</span></div></div></div><div class=\"flex w-auto h-1.5 mx-3 dark:bg-slate-800/50 rounded-full overflow-hidden\" role=\"progressbar\"><div class=\"flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500\" style=\"width: 50%;\"></div></div></div><div class=\"flex justify-center py-1 text-gray-900 dark:text-white text-sm gap-x-1\"></div></div><div id=\"budgeted-section\" class=\"group flex flex-col justify-between w-full p-1 rounded-xl dark:bg-slate-800/50 ring-1 dark:ring-slate-700/50 min-h-16\"><div class=\"rounded-lg dark:bg-gray-900 pb-4\"><div class=\"flex flex-col justify-between w-full py-2 px-3\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm font-normal text-white\">Budgeted</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">3,200</span> <span class=\"italic text-xs dark:text-gray-400\">of</span> <span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>9,900</span></div></div></div><div class=\"flex w-auto h-1.5 mx-3 dark:bg-slate-800/50 rounded-full overflow-hidden\" role=\"progressbar\"><div class=\"flex flex-col justify-center overflow-hidden bg-teal-900 text-xs text-white text-center whitespace-nowrap transition duration-500\" style=\"width: 50%;\"></div></div></div><div class=\"flex justify-center py-1 text-gray-900 dark:text-white text-sm gap-x-1\"></div></div></div><div class=\"w-full flex flex-row justify-end items-center gap-x-2 mb-2\"><button class=\"flex flex-row gap-x-2 text-sm font-medium text-gray-400 hover:bg-slate-700/25 hover:text-gray-100 rounded-md px-2 py-1.5\" hx-get=\"/budgets/categories\" hx-push-url=\"budgets/categories\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" class=\"size-5 fill-none stroke-[1.5px] stroke-current\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122\"></path></svg> Categories</button> <button id=\"add-budget-button\" type=\"button\" title=\"Create new budget\" class=\"py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-medium rounded-md\n                      text-slate-100 bg-teal-900 active:bg-teal-900 hover:bg-teal-800 disabled:opacity-50 \n                      disabled:pointer-events-none\" hx-get=\"/budgets/create\" hx-push-url=\"/budgets/create\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" class=\"size-3.5 fill-none stroke-[2.5px] stroke-gray-100\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\"></path></svg> Add budget</button></div><!-- Budget Main Content --><div class=\"flex flex-row h-full w-full\"><div class=\"flex flex-col w-full\"><div class=\"flex justify-end border-b-2 border-base-100 pb-4 pt-8 w-full hidden\"><button id=\"add-budget-button\" type=\"button\" title=\"Create new budget\" class=\"hidden py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-medium rounded-md\n                              text-gray-100 bg-teal-900 active:bg-teal-900 hover:bg-teal-800 disabled:opacity-50 \n                              disabled:pointer-events-none\" hx-get=\"/budgets/create\" hx-push-url=\"/budgets/create\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" class=\"size-3.5 fill-none stroke-[2.5px] stroke-gray-100\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\"></path></svg> Add budget</button></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-4 py-2 px-0.5 w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Budget Tab Bar --><div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-32\"><div class=\"flex flex-row justify-start w-full py-2 mb-4\"><h1 class=\"font-medium text-xl text-gray-100\">Budgets</h1></div><div class=\"mb-8 w-full\"><div id=\"income-section\" class=\"group flex flex-col justify-between w-full min-h-16\"><div class=\"rounded-lg pb-4\"><div class=\"flex flex-col justify-between w-full py-2\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm text-white\">Income</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.CurrentIncome))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 35, Col: 173}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <span class=\"italic text-xs dark:text-gray-400\">of</span> <span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.ExpectedIncome))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 37, Col: 140}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span></div></div></div><div class=\"flex w-auto h-2 dark:bg-slate-800/50 rounded-sm overflow-hidden\" role=\"progressbar\"><div class=\"flex flex-col justify-center overflow-hidden bg-emerald-400 text-xs text-white text-center whitespace-nowrap transition duration-500\" style=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(budgetProgress(overview.CurrentIncome, overview.ExpectedIncome))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 43, Col: 241}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"></div></div><div class=\"flex flex-col justify-between w-full py-2 mt-2\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm text-white\">Spending</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.CurrentSpend))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 52, Col: 172}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span> <span class=\"italic text-xs dark:text-gray-400\">of</span> <span class=\"font-normal text-sm text-teal-700 me-0.5\">$</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.ExpectedSpend))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 54, Col: 139}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div></div></div><div class=\"flex w-auto h-2 dark:bg-slate-800/50 rounded-sm overflow-hidden\" role=\"progressbar\"><div class=\"flex flex-col justify-center overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500\" style=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(budgetProgress(overview.CurrentSpend, overview.ExpectedSpend))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 61, Col: 97}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"></div></div></div></div></div><div class=\"w-full flex flex-row justify-end items-center gap-x-2 mb-3\"><button class=\"flex flex-row gap-x-2 text-sm font-medium text-gray-400 hover:bg-slate-700/25 hover:text-gray-100 rounded-md px-2 py-1.5\" hx-get=\"/budgets/categories\" hx-push-url=\"budgets/categories\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" class=\"size-5 fill-none stroke-[1.5px] stroke-current\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122\"></path></svg> Categories</button> <button id=\"add-budget-button\" type=\"button\" title=\"Create new budget\" class=\"py-1 ps-2 pe-3 inline-flex items-center gap-x-1 text-sm font-normal rounded-md\n                      text-white bg-teal-600 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 \n                      disabled:pointer-events-none\" hx-get=\"/budgets/create\" hx-push-url=\"/budgets/create\" hx-swap=\"none\"><svg viewBox=\"0 0 24 24\" class=\"size-3.5 fill-none stroke-[2.5px] stroke-white\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\"></path></svg> Add budget</button></div><!-- Budget Main Content --><div class=\"flex flex-row h-full w-full\"><div class=\"flex flex-col divide-y dark:divide-slate-800/50 border-t-2 dark:border-gray-800 w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,7 +129,7 @@ func Budgets(budgets []budgets.BudgetView, activeTab string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

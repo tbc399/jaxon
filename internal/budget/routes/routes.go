@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	budgetmods "jaxon.app/jaxon/internal/budget/models/budgets"
 	catmods "jaxon.app/jaxon/internal/budget/models/categories"
+	"jaxon.app/jaxon/internal/budget/services"
 	budgettemps "jaxon.app/jaxon/internal/budget/templates"
 	"jaxon.app/jaxon/internal/templates"
 )
@@ -37,7 +38,19 @@ func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	budgetPartial := budgettemps.Budgets(budgets, "budgets")
+	period, err := budgetmods.FetchCurrentPeriod(userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	overview, err := services.GetBudgetOverview(userId, period, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	budgetPartial := budgettemps.Budgets(overview, budgets, "budgets")
 	templates.App("Budgets", "budgets", budgetPartial).Render(r.Context(), w)
 }
 
@@ -48,14 +61,24 @@ func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
 	now := time.Now().UTC()
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
 
-	//overview, err := budgetmods.FetchBudgetOverview(userId, now.Year(), now.Month(), db)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	budgettemps.Budgets(budgets, "budgets").Render(r.Context(), w)
+	period, err := budgetmods.FetchCurrentPeriod(userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	overview, err := services.GetBudgetOverview(userId, period, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	budgettemps.Budgets(overview, budgets, "budgets").Render(r.Context(), w)
 }
 
 func getBudgetCreatePage(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +139,7 @@ func createBudget(w http.ResponseWriter, r *http.Request) {
 	userId := r.Context().Value("userId").(string)
 
 	categoryId := r.PostFormValue("category")
-	amount, err := strconv.ParseUint(r.PostFormValue("amount"), 10, 0)
+	amount, err := strconv.ParseInt(r.PostFormValue("amount"), 10, 0)
 	if err != nil {
 		slog.Error("Failed to parse amount", "amount", r.PostFormValue("amount"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -161,7 +184,7 @@ func updateBudget(w http.ResponseWriter, r *http.Request) {
 	budgetId := r.PathValue("id")
 	//categoryId := r.PostFormValue("category")
 
-	amount, err := strconv.ParseUint(r.PostFormValue("amount"), 10, 0)
+	amount, err := strconv.ParseInt(r.PostFormValue("amount"), 10, 0)
 	if err != nil {
 		slog.Error("Failed to parse amount", "amount", r.PostFormValue("amount"))
 		w.WriteHeader(http.StatusBadRequest)

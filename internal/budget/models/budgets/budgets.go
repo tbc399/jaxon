@@ -19,13 +19,13 @@ type Budget struct {
 	PeriodId   string `db:"period_id"`
 	UserId     string `db:"user_id"`
 	CategoryId string `db:"category_id"`
-	Amount     uint64
+	Amount     int64
 	Rollover   bool
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`
 }
 
-func NewBudget(periodId, userId, categoryId string, amount uint64) *Budget {
+func NewBudget(periodId, userId, categoryId string, amount int64) *Budget {
 	now := time.Now().UTC()
 	return &Budget{
 		Id:         shortuuid.New(),
@@ -125,15 +125,6 @@ func SaveMany(budgets []Budget, db *sqlx.DB) error {
 	return nil
 }
 
-type BudgetView struct {
-	Id                string
-	UserId            string `db:"user_id"`
-	CategoryId        string `db:"category_id"`
-	CategoryName      string `db:"category_name"`
-	Amount            int
-	TransactionsTotal int `db:"transactions_total"`
-}
-
 func FetchBudget(id, userId string, db *sqlx.DB) (*Budget, error) {
 	sqls := `SELECT * FROM budgets WHERE id = $1 AND user_id = $2`
 	slog.Info("Executing sql", "sql", sqls)
@@ -148,6 +139,15 @@ func FetchBudget(id, userId string, db *sqlx.DB) (*Budget, error) {
 		return nil, err
 	}
 	return budget, nil
+}
+
+type BudgetView struct {
+	Id                string
+	UserId            string `db:"user_id"`
+	CategoryId        string `db:"category_id"`
+	CategoryName      string `db:"category_name"`
+	Amount            int64
+	TransactionsTotal int `db:"transactions_total"`
 }
 
 func FetchBudgetViewsByMonth(userId string, year int, month time.Month, db *sqlx.DB) ([]BudgetView, error) {
@@ -246,6 +246,23 @@ func (self *BudgetPeriod) FetchBudgets(db *sqlx.DB) ([]Budget, error) {
 	return budgets, nil
 }
 
+func (self *BudgetPeriod) SumBudgets(userId string, db *sqlx.DB) (int64, error) {
+	sqls := `SELECT COALESCE(SUM(amount),0) FROM budgets WHERE period_id = $1 AND user_id = $2`
+	// TODO: do I need a new index?
+	slog.Info("Executing sql", "sql", sqls)
+	var amount int64
+	err := db.Get(&amount, sqls, self.Id, userId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to sum budget amounts", "user", self.UserId, "period", self.Id, "error", err.Error())
+			return 0, nil
+		}
+		slog.Error("Failed to sum budget amounts", "user", self.UserId, "period", self.Id, "error", err.Error())
+		return 0, err
+	}
+	return amount, nil
+}
+
 func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 	sqls := `SELECT DISTINCT ON (bp.user_id) bp.* FROM budget_periods AS bp LEFT JOIN users AS u ON bp.user_id = u.id WHERE u.active = true ORDER BY bp.user_id, bp.end DESC`
 	slog.Info("Executing sql", "sql", sqls)
@@ -262,7 +279,4 @@ func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 	return rollovers, nil
 }
 
-type BudgetOverview struct {
-	ExpectedIncome int
 
-}

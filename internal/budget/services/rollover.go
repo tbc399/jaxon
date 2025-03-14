@@ -31,7 +31,7 @@ func Rollover(ctx context.Context, db *sqlx.DB) {
 			if period.End.Before(now) {
 				slog.Info("Starting a budget period rollover", "user", period.UserId, "period", period.Id)
 				start := period.Start.AddDate(0, 1, 0)
-				end := period.End.AddDate(0, 1, 0)
+				end := period.End.AddDate(0, 1, 0) // TODO: need to fix
 				newPeriod := budgets.NewBudgetPeriod(period.UserId, start, end)
 				previousBudgets, err := period.FetchBudgets(db)
 				if err != nil {
