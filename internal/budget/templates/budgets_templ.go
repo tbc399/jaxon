@@ -41,14 +41,14 @@ func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, ac
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Budget Tab Bar --><div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-32\"><div class=\"flex flex-row justify-start w-full py-2 mb-4\"><h1 class=\"font-medium text-xl text-gray-100\">Budgets</h1></div><div class=\"mb-8 w-full\"><div id=\"income-section\" class=\"group flex flex-col justify-between w-full min-h-16\"><div class=\"rounded-lg pb-4\"><div class=\"flex flex-col justify-between w-full py-2\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm text-white\">Income</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Budget Tab Bar --><div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-32\"><div class=\"flex flex-row justify-between w-full py-2 mb-4\"><h1 class=\"font-medium text-xl text-white\">Budgets</h1><!-- Select --><select data-hs-select=\"{\n              &#34;placeholder&#34;: &#34;Select option...&#34;,\n              &#34;toggleTag&#34;: &#34;&lt;button type=\\&#34;button\\&#34; aria-expanded=\\&#34;false\\&#34;&gt;&lt;/button&gt;&#34;,\n              &#34;toggleClasses&#34;: &#34;hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-slate-800/50 dark:border-slate-800 dark:text-slate-400 dark:focus:outline-hidden dark:focus:ring-1 dark:focus:ring-neutral-600&#34;,\n              &#34;dropdownClasses&#34;: &#34;mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-md overflow-hidden overflow-y-auto [&amp;::-webkit-scrollbar]:w-2 [&amp;::-webkit-scrollbar-thumb]:rounded-full [&amp;::-webkit-scrollbar-track]:bg-gray-100 [&amp;::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&amp;::-webkit-scrollbar-track]:bg-neutral-700 dark:[&amp;::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-slate-800/50 dark:border-slate-800&#34;,\n              &#34;optionClasses&#34;: &#34;py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800&#34;,\n              &#34;optionTemplate&#34;: &#34;&lt;div class=\\&#34;flex justify-between items-center w-full\\&#34;&gt;&lt;span data-title&gt;&lt;/span&gt;&lt;span class=\\&#34;hidden hs-selected:block\\&#34;&gt;&lt;svg class=\\&#34;shrink-0 size-3.5 text-blue-600 dark:text-blue-500 \\&#34; xmlns=\\&#34;http:.w3.org/2000/svg\\&#34; width=\\&#34;24\\&#34; height=\\&#34;24\\&#34; viewBox=\\&#34;0 0 24 24\\&#34; fill=\\&#34;none\\&#34; stroke=\\&#34;currentColor\\&#34; stroke-width=\\&#34;2\\&#34; stroke-linecap=\\&#34;round\\&#34; stroke-linejoin=\\&#34;round\\&#34;&gt;&lt;polyline points=\\&#34;20 6 9 17 4 12\\&#34;/&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/div&gt;&#34;,\n              &#34;extraMarkup&#34;: &#34;&lt;div class=\\&#34;absolute top-1/2 end-3 -translate-y-1/2\\&#34;&gt;&lt;svg class=\\&#34;shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \\&#34; xmlns=\\&#34;http://www.w3.org/2000/svg\\&#34; width=\\&#34;24\\&#34; height=\\&#34;24\\&#34; viewBox=\\&#34;0 0 24 24\\&#34; fill=\\&#34;none\\&#34; stroke=\\&#34;currentColor\\&#34; stroke-width=\\&#34;2\\&#34; stroke-linecap=\\&#34;round\\&#34; stroke-linejoin=\\&#34;round\\&#34;&gt;&lt;path d=\\&#34;m7 15 5 5 5-5\\&#34;/&gt;&lt;path d=\\&#34;m7 9 5-5 5 5\\&#34;/&gt;&lt;/svg&gt;&lt;/div&gt;&#34;\n            }\" class=\"hidden\"><option selected>Mar 2025</option> <option>Feb 2025</option> <option>Jan 2025</option></select><!-- End Select --></div><div class=\"mb-8 w-full\"><div id=\"income-section\" class=\"group flex flex-col justify-between w-full min-h-16\"><div class=\"rounded-lg pb-4\"><div class=\"flex flex-col justify-between w-full py-2\"><div class=\"flex flex-row justify-between w-full\"><div class=\"\"><span class=\"text-sm text-white me-1 hover:underline underline-offset-4 hover:cursor-pointer\">Income</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.CurrentIncome))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 35, Col: 173}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 50, Col: 173}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -61,7 +61,7 @@ func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, ac
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.ExpectedIncome))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 37, Col: 140}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 52, Col: 140}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -74,20 +74,20 @@ func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, ac
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(budgetProgress(overview.CurrentIncome, overview.ExpectedIncome))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 43, Col: 241}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 58, Col: 241}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"></div></div><div class=\"flex flex-col justify-between w-full py-2 mt-2\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm text-white\">Spending</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"></div></div><div class=\"flex flex-col mt-2 justify-between w-full py-2\"><div class=\"flex flex-row justify-between w-full\"><div><span class=\"text-sm text-white\">Spending</span></div><div class=\"\"><span class=\"text-sm font-medium text-white\"><span class=\"font-normal text-xs text-teal-700 me-0.5\">$</span><span class=\"text-xs font-normal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.CurrentSpend))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 52, Col: 172}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 67, Col: 172}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -100,7 +100,7 @@ func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, ac
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(humanize.Comma(overview.ExpectedSpend))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 54, Col: 139}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 69, Col: 139}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -113,7 +113,7 @@ func Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, ac
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(budgetProgress(overview.CurrentSpend, overview.ExpectedSpend))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 61, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budgets.templ`, Line: 76, Col: 97}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {

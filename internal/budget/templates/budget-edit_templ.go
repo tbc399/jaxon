@@ -34,14 +34,14 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-16\"><div class=\"flex flex-row justify-start mb-4 w-full py-2\"><h1 class=\"font-medium text-xl text-gray-100\">Budget details</h1></div><div class=\"w-full p-1.5 rounded-2xl dark:bg-gray-800/50 ring-1 dark:ring-slate-700/50\"><form hx-put=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\" hx-swap-oob=\"outerHTML:#main-content\" class=\"flex flex-col w-full justify-center items-center h-full pt-8 px-32\"><div class=\"flex flex-row justify-start w-full mb-4\"><div class=\"flex flex-row items-center gap-x-2 w-full dark:text-slate-500 dark:hover:text-slate-400\"><svg viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-4 fill-none stroke-2 stroke-current\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18\"></path></svg> <a hx-get=\"/budgets/partial\" hx-push-url=\"/budgets\" hx-target=\"#main-content\" class=\"text-sm hover:cursor-pointer\">Back to budgets</a></div></div><div class=\"flex flex-row justify-start mb-4 w-full py-2\"><h1 class=\"font-medium text-xl dark:text-white\">Budget details</h1></div><div class=\"w-full p-1.5 rounded-2xl dark:bg-gray-800/50 ring-1 dark:ring-slate-700/50\"><form hx-put=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(string(templ.URL(fmt.Sprintf("/budgets/%s", budget.Id))))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 15, Col: 83}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 29, Col: 83}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -68,7 +68,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cat_%s", category.Id))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 33, Col: 81}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 47, Col: 81}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -81,7 +81,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(category.Id)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 33, Col: 103}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 47, Col: 103}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -94,7 +94,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(category.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 33, Col: 130}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 47, Col: 130}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -112,7 +112,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cat_%s", category.Id))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 35, Col: 81}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 49, Col: 81}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -125,7 +125,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(category.Id)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 35, Col: 103}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 49, Col: 103}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(category.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 35, Col: 121}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 49, Col: 121}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -157,7 +157,7 @@ func BudgetDetail(budget *budgets.Budget, categories []categories.Category) temp
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(budget.Amount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 51, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/budget/templates/budget-edit.templ`, Line: 65, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {

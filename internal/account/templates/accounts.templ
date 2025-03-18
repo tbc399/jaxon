@@ -10,7 +10,7 @@ func tabStyling(activeTab string, expected string) string {
 
 // Full page reload for accounts menu selection
 templ Accounts(accountsTabSection templ.Component, activeTab string) {
-	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full h-full items-center justify-center pt-8 px-16">
+	<div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full h-full items-center justify-center pt-8 px-32">
         <div class="flex flex-row justify-start w-full mb-4 py-2">
             <h1 class="font-medium text-xl text-gray-100">Connections</h1>
         </div>

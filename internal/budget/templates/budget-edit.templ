@@ -7,9 +7,23 @@ import "jaxon.app/jaxon/internal/budget/models/budgets"
 
 
 templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
-    <div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full justify-center items-center h-full pt-8 px-16">
+    <div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full justify-center items-center h-full pt-8 px-32">
+        <div class="flex flex-row justify-start w-full mb-4">
+            <div class="flex flex-row items-center gap-x-2 w-full dark:text-slate-500 dark:hover:text-slate-400">
+                <svg viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 fill-none stroke-2 stroke-current">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                <a 
+                    hx-get="/budgets/partial" 
+                    hx-push-url="/budgets" 
+                    hx-target="#main-content"
+                    class="text-sm hover:cursor-pointer">
+                    Back to budgets
+                </a>
+            </div>
+        </div>
         <div class="flex flex-row justify-start mb-4 w-full py-2">
-            <h1 class="font-medium text-xl text-gray-100">Budget details</h1>
+            <h1 class="font-medium text-xl dark:text-white">Budget details</h1>
         </div>
         <div class="w-full p-1.5 rounded-2xl dark:bg-gray-800/50 ring-1 dark:ring-slate-700/50">
             <form hx-put={ string(templ.URL(fmt.Sprintf("/budgets/%s", budget.Id))) } hx-swap="none" class="w-full rounded-xl dark:bg-gray-900">

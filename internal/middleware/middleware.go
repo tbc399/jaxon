@@ -57,7 +57,13 @@ func EnsureAuth(next http.Handler) http.Handler {
 			// user is not authenticated, need to redirect
 			// have to handle regular redirect and hx redirect
 			slog.Warn("No session cookie found")
-			w.WriteHeader(http.StatusUnauthorized)
+			_, ok := r.Header["Hx-Request"]
+			if ok {
+				w.Header().Add("Hx-Redirect", "/auth/login")
+				w.WriteHeader(http.StatusOK)
+			} else {
+				http.Redirect(w, r, "/auth/login", http.StatusSeeOther)
+			}
 			return
 		}
 

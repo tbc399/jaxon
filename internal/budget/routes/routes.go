@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -26,7 +27,7 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("PUT /budgets/{id}", updateBudget)
 }
 
-func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
+func getBudgets(w http.ResponseWriter, r *http.Request) (*services.BudgetOverview, []budgetmods.BudgetView, error) {
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
@@ -34,50 +35,38 @@ func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
 	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return nil, nil, errors.New("Failed to get budgets")
 	}
 
 	period, err := budgetmods.FetchCurrentPeriod(userId, db)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return nil, nil, errors.New("Failed to get current period")
 	}
 
 	overview, err := services.GetBudgetOverview(userId, period, db)
 	if err != nil {
+		return nil, nil, errors.New("Failed to get overview")
+	}
+
+	return overview, budgets, nil
+}
+
+func getBudgetsFullPage(w http.ResponseWriter, r *http.Request) {
+	overview, budgets, err := getBudgets(w, r)
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	budgetPartial := budgettemps.Budgets(overview, budgets, "budgets")
 	templates.App("Budgets", "budgets", budgetPartial).Render(r.Context(), w)
 }
 
 func getBudgetsPartial(w http.ResponseWriter, r *http.Request) {
-	db := r.Context().Value("db").(*sqlx.DB)
-	userId := r.Context().Value("userId").(string)
-
-	now := time.Now().UTC()
-	budgets, err := budgetmods.FetchBudgetViewsByMonth(userId, now.Year(), now.Month(), db)
-
+	overview, budgets, err := getBudgets(w, r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	period, err := budgetmods.FetchCurrentPeriod(userId, db)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	overview, err := services.GetBudgetOverview(userId, period, db)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
 	budgettemps.Budgets(overview, budgets, "budgets").Render(r.Context(), w)
 }
 
@@ -209,6 +198,10 @@ func updateBudget(w http.ResponseWriter, r *http.Request) {
 	err = budget.Save(db)
 
 	http.Redirect(w, r, "/budgets", http.StatusSeeOther)
+}
+
+func getIncomeUpdatePage(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func getCategoriesPage(w http.ResponseWriter, r *http.Request) {
