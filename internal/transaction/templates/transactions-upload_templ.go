@@ -43,7 +43,7 @@ func UploadPage(accounts []models.Account) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(account.Id)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-upload.templ`, Line: 109, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-upload.templ`, Line: 112, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -56,7 +56,7 @@ func UploadPage(accounts []models.Account) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(account.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-upload.templ`, Line: 109, Col: 81}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-upload.templ`, Line: 112, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {

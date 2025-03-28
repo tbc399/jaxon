@@ -135,7 +135,7 @@ func FetchBudget(id, userId string, db *sqlx.DB) (*Budget, error) {
 			slog.Warn("Failed to fetch budget", "budget_id", id, "error", err.Error())
 			return nil, nil
 		}
-		slog.Error("Failed to fetch budgets", "budget_id", id, "error", err.Error())
+		slog.Error("Failed to fetch budget", "budget_id", id, "error", err.Error())
 		return nil, err
 	}
 	return budget, nil
@@ -148,6 +148,48 @@ type BudgetView struct {
 	CategoryName      string `db:"category_name"`
 	Amount            int64
 	TransactionsTotal int `db:"transactions_total"`
+}
+
+func FetchBudgetView(id, userId string, db *sqlx.DB) (*BudgetView, error) {
+	sqls := `SELECT budgets.id, budgets.user_id, budgets.category_id, budgets.amount,
+            categories.name as category_name, SUM(COALESCE(transactions.amount, 0)) as transactions_total
+            FROM budgets LEFT JOIN budget_periods ON budgets.period_id = budget_periods.id LEFT JOIN categories ON budgets.category_id = categories.id
+            LEFT JOIN transactions ON budgets.category_id = transactions.category_id AND (transactions.date BETWEEN $4 AND $5 OR transactions.date is NULL) 
+            WHERE budgets.id = $1 AND budgets.user_id = $2`
+	slog.Info("Executing sql", "sql", sqls)
+	budget := new(BudgetView)
+	err := db.Get(budget, sqls, id, userId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch budget", "budget_id", id, "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch budget", "budget_id", id, "error", err.Error())
+		return nil, err
+	}
+	return budget, nil
+}
+
+func FetchIncomeBudgetView(id, userId string, db *sqlx.DB) (*BudgetView, error) {
+	sqls := `SELECT budgets.id, budgets.user_id, budgets.category_id, budgets.amount,
+            categories.name as category_name, SUM(COALESCE(transactions.amount, 0)) as transactions_total
+            FROM budgets LEFT JOIN budget_periods ON budgets.period_id = budget_periods.id 
+			LEFT JOIN categories ON budgets.category_id = categories.id
+            LEFT JOIN transactions ON budgets.category_id = transactions.category_id 
+			AND (transactions.date BETWEEN start_date AND end_date OR transactions.date is NULL) 
+            WHERE budgets.id = $1 AND budgets.user_id = $2 AND category_name = 'Income'`
+	slog.Info("Executing sql", "sql", sqls)
+	income := new(BudgetView)
+	err := db.Get(income, sqls, id, userId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch income budget", "user", userId, "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch income budget", "user", userId, "error", err.Error())
+		return nil, err
+	}
+	return income, nil
 }
 
 func FetchBudgetViewsByMonth(userId string, year int, month time.Month, db *sqlx.DB) ([]BudgetView, error) {
@@ -218,6 +260,22 @@ func FetchCurrentPeriod(userId string, db *sqlx.DB) (*BudgetPeriod, error) {
 	slog.Info("Executing sql", "sql", sqls)
 	period := new(BudgetPeriod)
 	err := db.Get(period, sqls, userId, now)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch budget period", "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch budget period", "error", err.Error())
+		return nil, err
+	}
+	return period, nil
+}
+
+func FetchPeriod(periodId, userId string, db *sqlx.DB) (*BudgetPeriod, error) {
+	sqls := `SELECT * FROM budget_periods WHERE id = $1 AND user_id = $2`
+	slog.Info("Executing sql", "sql", sqls)
+	period := new(BudgetPeriod)
+	err := db.Get(period, sqls, periodId, userId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			slog.Warn("Failed to fetch budget period", "error", err.Error())

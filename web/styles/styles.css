@@ -842,6 +842,11 @@ select {
   z-index: 80;
 }
 
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
 .mx-10 {
   margin-left: 2.5rem;
   margin-right: 2.5rem;
@@ -876,6 +881,10 @@ select {
   margin-bottom: 0.25rem;
 }
 
+.mb-1\.5 {
+  margin-bottom: 0.375rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -906,10 +915,6 @@ select {
 
 .me-0\.5 {
   margin-inline-end: 0.125rem;
-}
-
-.me-1 {
-  margin-inline-end: 0.25rem;
 }
 
 .me-2 {
@@ -1015,8 +1020,8 @@ select {
   height: 100%;
 }
 
-.h-1 {
-  height: 0.25rem;
+.h-1\.5 {
+  height: 0.375rem;
 }
 
 .h-1\/2 {
@@ -1025,6 +1030,10 @@ select {
 
 .h-2 {
   height: 0.5rem;
+}
+
+.h-24 {
+  height: 6rem;
 }
 
 .h-\[1px\] {
@@ -1154,6 +1163,10 @@ select {
   scroll-snap-align: center;
 }
 
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1200,6 +1213,10 @@ select {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
 }
 
 .gap-4 {
@@ -1350,8 +1367,8 @@ select {
   border-inline-end-width: 1px;
 }
 
-.border-t-2 {
-  border-top-width: 2px;
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-solid {
@@ -1440,6 +1457,11 @@ select {
 .bg-indigo-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+}
+
+.bg-red-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
 .bg-teal-600 {
@@ -1534,10 +1556,6 @@ select {
   stroke-width: 2px;
 }
 
-.stroke-1 {
-  stroke-width: 1;
-}
-
 .p-0\.5 {
   padding: 0.125rem;
 }
@@ -1578,11 +1596,6 @@ select {
 .px-10 {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
-}
-
-.px-16 {
-  padding-left: 4rem;
-  padding-right: 4rem;
 }
 
 .px-2 {
@@ -1791,10 +1804,6 @@ select {
   font-weight: 700;
 }
 
-.font-light {
-  font-weight: 300;
-}
-
 .font-medium {
   font-weight: 500;
 }
@@ -1813,10 +1822,6 @@ select {
 
 .lowercase {
   text-transform: lowercase;
-}
-
-.italic {
-  font-style: italic;
 }
 
 .leading-7 {
@@ -1941,20 +1946,12 @@ select {
   color: rgb(212 212 216 / var(--tw-text-opacity));
 }
 
-.underline {
-  text-decoration-line: underline;
-}
-
 .decoration-2 {
   text-decoration-thickness: 2px;
 }
 
 .underline-offset-2 {
   text-underline-offset: 2px;
-}
-
-.underline-offset-4 {
-  text-underline-offset: 4px;
 }
 
 .underline-offset-auto {
@@ -2212,6 +2209,11 @@ select {
 .hover\:bg-teal-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
+}
+
+.hover\:text-emerald-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(52 211 153 / var(--tw-text-opacity));
 }
 
 .hover\:text-gray-100:hover {
@@ -2502,6 +2504,10 @@ select {
   .md\:block {
     display: block;
   }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
@@ -2647,11 +2653,6 @@ select {
     color: rgb(229 231 235 / var(--tw-text-opacity));
   }
 
-  .dark\:text-gray-300 {
-    --tw-text-opacity: 1;
-    color: rgb(209 213 219 / var(--tw-text-opacity));
-  }
-
   .dark\:text-gray-400 {
     --tw-text-opacity: 1;
     color: rgb(156 163 175 / var(--tw-text-opacity));
@@ -2750,10 +2751,6 @@ select {
     background-color: rgb(30 41 59 / 0.5);
   }
 
-  .hover\:dark\:bg-slate-800\/75:hover {
-    background-color: rgb(30 41 59 / 0.75);
-  }
-
   .hover\:dark\:bg-slate-800\/25:hover {
     background-color: rgb(30 41 59 / 0.25);
   }
@@ -2768,6 +2765,11 @@ select {
     color: rgb(203 213 225 / var(--tw-text-opacity));
   }
 
+  .dark\:hover\:text-slate-400:hover {
+    --tw-text-opacity: 1;
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+  }
+
   .dark\:hover\:text-slate-500:hover {
     --tw-text-opacity: 1;
     color: rgb(100 116 139 / var(--tw-text-opacity));
@@ -2776,16 +2778,6 @@ select {
   .dark\:hover\:text-teal-700:hover {
     --tw-text-opacity: 1;
     color: rgb(15 118 110 / var(--tw-text-opacity));
-  }
-
-  .hover\:dark\:text-slate-400:hover {
-    --tw-text-opacity: 1;
-    color: rgb(148 163 184 / var(--tw-text-opacity));
-  }
-
-  .dark\:hover\:text-slate-400:hover {
-    --tw-text-opacity: 1;
-    color: rgb(148 163 184 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:underline:hover {

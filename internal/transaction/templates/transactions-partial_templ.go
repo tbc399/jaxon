@@ -50,7 +50,7 @@ func transactionsPartial(transactions []interface{}) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(transaction.(time.Time).Format("January 02, 2006"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-partial.templ`, Line: 19, Col: 84}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-partial.templ`, Line: 19, Col: 60}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {

@@ -3,13 +3,13 @@ package templates
 import "fmt"
 
 type Selectable interface {
-    GetId() string
-    GetName() string
+	GetId() string
+	GetName() string
 }
 
 templ Dropdown[T Selectable](selections []T, idPrefix string) {
-    <select
-        data-hs-select='{
+	<select
+		data-hs-select='{
       "placeholder": "Select",
       "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
       "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-neutral rounded-md text-start text-xs font-medium text-base-content focus:outline-none focus:ring-2 focus:ring-gray-800",
@@ -18,11 +18,11 @@ templ Dropdown[T Selectable](selections []T, idPrefix string) {
       "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 dark:text-blue-500 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
       "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg viewBox=\"0 0 24 24\" class=\"size-3 stroke-[1.5px] fill-none stroke-base-content\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m19.5 8.25-7.5 7.5-7.5-7.5\" /></svg></div>"
     }'
-        class="hidden"
-    >
-        <option value="">Choose</option>
-        for _, selection := range selections {
-            <option id={ fmt.Sprintf("%s_%s", idPrefix, selection.GetId()) } value={ selection.GetId() }>{ selection.GetName() }</option>
-        }
-    </select>
+		class="hidden"
+	>
+		<option value="">Choose</option>
+		for _, selection := range selections {
+			<option id={ fmt.Sprintf("%s_%s", idPrefix, selection.GetId()) } value={ selection.GetId() }>{ selection.GetName() }</option>
+		}
+	</select>
 }

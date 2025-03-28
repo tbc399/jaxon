@@ -13,6 +13,7 @@ import (
 	"jaxon.app/jaxon/internal/budget/services"
 	budgettemps "jaxon.app/jaxon/internal/budget/templates"
 	"jaxon.app/jaxon/internal/templates"
+	"jaxon.app/jaxon/internal/transaction/models"
 )
 
 func AddRoutes(router *http.ServeMux) {
@@ -25,6 +26,7 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /budgets/{id}", getBudgetDetailPage)
 	router.HandleFunc("DELETE /budgets/{id}", removeBudget)
 	router.HandleFunc("PUT /budgets/{id}", updateBudget)
+	//router.HandleFunc("GET /budgets/income/{id}", getIncomeDetailPage)
 }
 
 func getBudgets(w http.ResponseWriter, r *http.Request) (*services.BudgetOverview, []budgetmods.BudgetView, error) {
@@ -102,7 +104,7 @@ func getBudgetDetailPage(w http.ResponseWriter, r *http.Request) {
 
 	budgetId := r.PathValue("id")
 
-	budget, err := budgetmods.FetchBudget(budgetId, userId, db)
+	budget, err := budgetmods.FetchBudgetView(budgetId, userId, db)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -110,18 +112,56 @@ func getBudgetDetailPage(w http.ResponseWriter, r *http.Request) {
 
 	hxRequest := r.Header.Get("Hx-Request")
 
-	categories, err := catmods.FetchAll(userId, db)
+	//transactions, err := models.FetchForCategoryInRange()
+	transactions := []models.TransactionView{}
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	if hxRequest == "true" {
-		budgettemps.BudgetDetail(budget, categories).Render(r.Context(), w)
+		budgettemps.BudgetDetail(budget, transactions).Render(r.Context(), w)
 	} else {
-		updatePartial := budgettemps.BudgetDetail(budget, categories)
+		updatePartial := budgettemps.BudgetDetail(budget, transactions)
 		templates.App("Budget Detail", "budgets", updatePartial).Render(r.Context(), w)
 	}
 }
+
+/*
+func getIncomeDetailPage(w http.ResponseWriter, r *http.Request) {
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
+
+	budgetId := r.PathValue("id")
+	
+	budget, err := budgetmods.FetchIncomeBudgetView(budgetId, userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	hxRequest := r.Header.Get("Hx-Request")
+
+	//period, err := budgetmods.FetchPeriod(budget.PeriodId, userId, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	transactions, err := models.FetchForCategoryInRange(userId, budget.CategoryId, period.Start, period.End, db)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if hxRequest == "true" {
+		budgettemps.BudgetDetail(budget, transactions).Render(r.Context(), w)
+	} else {
+		updatePartial := budgettemps.BudgetDetail(budget, transactions)
+		templates.App("Budget Detail", "budgets", updatePartial).Render(r.Context(), w)
+	}
+}
+*/
 
 func createBudget(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)
@@ -200,9 +240,6 @@ func updateBudget(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/budgets", http.StatusSeeOther)
 }
 
-func getIncomeUpdatePage(w http.ResponseWriter, r *http.Request) {
-
-}
 
 func getCategoriesPage(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)

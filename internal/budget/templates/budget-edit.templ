@@ -1,12 +1,11 @@
 package templates
 
-import "jaxon.app/jaxon/internal/budget/models/categories"
 import "fmt"
-import "jaxon.app/jaxon/internal/templates"
 import "jaxon.app/jaxon/internal/budget/models/budgets"
+import "jaxon.app/jaxon/internal/transaction/models"
 
 
-templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
+templ BudgetDetail(budgetView *budgets.BudgetView, transactions []models.TransactionView) {
     <div id="main-content" hx-swap-oob="outerHTML:#main-content" class="flex flex-col w-full justify-center items-center h-full pt-8 px-32">
         <div class="flex flex-row justify-start w-full mb-4">
             <div class="flex flex-row items-center gap-x-2 w-full dark:text-slate-500 dark:hover:text-slate-400">
@@ -23,10 +22,10 @@ templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
             </div>
         </div>
         <div class="flex flex-row justify-start mb-4 w-full py-2">
-            <h1 class="font-medium text-xl dark:text-white">Budget details</h1>
+            <h1 class="font-medium text-xl dark:text-white">budgetView.CategoryName</h1>
         </div>
         <div class="w-full p-1.5 rounded-2xl dark:bg-gray-800/50 ring-1 dark:ring-slate-700/50">
-            <form hx-put={ string(templ.URL(fmt.Sprintf("/budgets/%s", budget.Id))) } hx-swap="none" class="w-full rounded-xl dark:bg-gray-900">
+            <form hx-put={ string(templ.URL(fmt.Sprintf("/budgets/%s", budgetView.Id))) } hx-swap="none" class="w-full rounded-xl dark:bg-gray-900">
                 <div class="flex flex-col gap-y-5 w-full h-1/2 p-4">
                     <div class="flex flex-row justify-between mb-4">
                       //<span class="text-base text-slate-400">Create a budget for <span class="font-bold text-base text-teal-800"></span></span>
@@ -39,18 +38,6 @@ templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
                         <span class="text-slate-300 text-sm font-semibold">Category</span>
                         <div class="text-sm font-normal text-slate-500">What is this budget for?</div>
                       </div>
-                      <div class="flex items-end">
-                        @templates.Dropdown(categories, "cat")
-                        <select id="create-budget-category" name="category" class="bg-transparent rounded-lg dark:text-gray-400">
-                          for _, category := range categories {
-                              if category.Id == budget.CategoryId {
-                                  <option id={ fmt.Sprintf("cat_%s", category.Id) } value={ category.Id } selected>{ category.Name }</option>
-                              } else {
-                                  <option id={ fmt.Sprintf("cat_%s", category.Id) } value={ category.Id }>{ category.Name }</option>
-                              }
-                          }
-                        </select>
-                      </div>
                     </div>
                     <div class="w-full flex justify-between gap-y-2">
                       <div class="flex flex-col">
@@ -62,32 +49,9 @@ templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
                         <input id="budget-amount-edit" 
                             type="text" 
                             name="amount" 
-                            value={ fmt.Sprint(budget.Amount) } 
+                            value={ fmt.Sprint(budgetView.Amount) } 
                             class="rounded-lg bg-transparent dark:text-gray-400" placeholder="Amount"></input>
                       </div>
-                    </div>
-                    <div class="hidden w-full flex justify-between gap-y-2">
-                      <div class="flex flex-col">
-                        <span class="text-slate-300 text-sm font-semibold">Frequency</span>
-                        <div class="text-sm font-normal text-slate-500">How often do you plan to spend?</div>
-                      </div>
-                      <div class="flex items-end">
-                        <div id="toggle-count" class="p-0.5 inline-block bg-gray-100 rounded-lg dark:bg-neutral-700">
-                          <label for="toggle-count-monthly" class="relative inline-block py-2 px-3">
-                            <span class="inline-block relative z-10 text-sm font-medium text-gray-800 cursor-pointer dark:text-neutral-200">
-                              Monthly
-                            </span>
-                            <input id="toggle-count-monthly" name="frequency" value="monthly" type="radio" class="absolute top-0 end-0 size-full border-transparent bg-transparent bg-none text-transparent rounded-lg cursor-pointer before:absolute before:inset-0 before:size-full before:rounded-lg focus:ring-offset-0 checked:before:bg-white checked:before:shadow-sm checked:bg-none focus:ring-transparent dark:checked:before:bg-neutral-800 dark:focus:ring-offset-transparent" checked="">
-                          </label>
-                          <label for="toggle-count-annual" class="relative inline-block py-2 px-3">
-                            <span class="inline-block relative z-10 text-sm font-medium text-gray-800 cursor-pointer dark:text-neutral-200">
-                              Yearly
-                            </span>
-                            <input id="toggle-count-annual" name="frequency" value="yearly" type="radio" class="absolute top-0 end-0 size-full border-transparent bg-transparent bg-none text-transparent rounded-lg cursor-pointer before:absolute before:inset-0 before:size-full before:rounded-lg focus:ring-offset-0 checked:before:bg-white checked:before:shadow-sm checked:bg-none focus:ring-transparent dark:checked:before:bg-neutral-800 dark:focus:ring-offset-transparent">
-                          </label>
-                        </div>
-                      </div>
-                      <a class="text-xs hidden font-semibold text-teal-700 hover:underline hover:underline-offset-2" href="#">Split</a>
                     </div>
                     <div class="flex justify-end mt-5">
                       <button type="submit" class="rounded-md bg-teal-800 hover:bg-teal-700 active:bg-teal-800 active:text-slate-200 py-1.5 px-2.5 text-xs font-semibold text-slate-200 hover:text-slate-100">Create</button>
@@ -95,6 +59,15 @@ templ BudgetDetail(budget *budgets.Budget, categories []categories.Category) {
                 </div>
             </form>
         </div>
+        <!-- Transaction list -->
+        <div class="w-full mt-5">
+            <div class="flex flex-row justify-start w-full dark:text-slate-200">
+                <h1>Transactions</h1>
+            </div>
+            <div class="w-full">
+            </div>
+        </div>
+        <!-- Transaction list end -->
     </div>
 
 }

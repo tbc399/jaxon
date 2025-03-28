@@ -4,8 +4,8 @@ import "jaxon.app/jaxon/internal/transaction/models"
 import "time"
 
 func isDate(t any) bool {
-    _, ok := t.(time.Time)
-    return ok
+	_, ok := t.(time.Time)
+	return ok
 }
 
 templ transactionsPartial(transactions []interface{}) {
@@ -14,13 +14,13 @@ templ transactionsPartial(transactions []interface{}) {
 			<div class="w-full">
 				<div class="">
 					for _, transaction := range transactions {
-                        if isDate(transaction) {
-                            <div class="flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1">
-                                { transaction.(time.Time).Format("January 02, 2006") }
-                            </div>
-                        } else {
-                            @transactionListItem(transaction.(models.TransactionView))
-                        }
+						if isDate(transaction) {
+							<div class="flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1">
+								{ transaction.(time.Time).Format("January 02, 2006") }
+							</div>
+						} else {
+							@transactionListItem(transaction.(models.TransactionView))
+						}
 					}
 				</div>
 			</div>

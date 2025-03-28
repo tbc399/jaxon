@@ -8,12 +8,10 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	accountmods "jaxon.app/jaxon/internal/account/models/accounts"
-	//"jaxon.app/jaxon/internal/templates"
-	//"jaxon.app/jaxon/internal/transaction/models"
-)
+import accountmods "jaxon.app/jaxon/internal/account/models/accounts"
 
+// "jaxon.app/jaxon/internal/templates"
+// "jaxon.app/jaxon/internal/transaction/models"
 func Transactions(transactions []interface{}, accounts []accountmods.Account, activeTab string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -47,7 +45,7 @@ func Transactions(transactions []interface{}, accounts []accountmods.Account, ac
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(account.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions.templ`, Line: 27, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions.templ`, Line: 27, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {

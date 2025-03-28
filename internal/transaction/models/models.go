@@ -133,6 +133,23 @@ func FetchMany(userId string, db *sqlx.DB) ([]TransactionView, error) {
 	return transactions, nil
 }
 
+func FetchForCategoryInRange(userId, categoryId string, start, end time.Time, db *sqlx.DB) ([]TransactionView, error) {
+	sqls := `SELECT t.id, t.description, t.amount, t.category_id, c.name as category_name, t.date, t.notes, t.hidden FROM transactions AS t LEFT JOIN categories AS c ON t.category_id = c.id 
+		WHERE t.user_id = $1 ORDER BY t.date DESC`
+	slog.Info("Executing sql", "sql", sqls)
+	transactions := []TransactionView{}
+	err := db.Select(&transactions, sqls, userId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			slog.Warn("Failed to fetch transactions for budget", "user", userId, "error", err.Error())
+			return nil, nil
+		}
+		slog.Error("Failed to fetch transactions for budget", "user", userId, "error", err.Error())
+		return nil, err
+	}
+	return transactions, nil
+}
+
 func Fetch(id string, db *sqlx.DB) (*Transaction, error) {
 	sqls := "SELECT * FROM transactions WHERE id = $1"
 	transaction := new(Transaction)
@@ -149,7 +166,9 @@ func Fetch(id string, db *sqlx.DB) (*Transaction, error) {
 }
 
 func SumInPeriod(userId string, period *budgets.BudgetPeriod, db *sqlx.DB) (int64, error) {
-	sqls := `SELECT COALESCE(SUM(amount), 0) FROM transactions AS t LEFT JOIN categories AS c ON t.category_id = c.id WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3 AND c.type = 'expense'`
+	// TODO: need to be able to pickup transactions that are uncategorized
+	sqls := `SELECT COALESCE(SUM(amount), 0) FROM transactions AS t LEFT JOIN categories AS c 
+		ON t.category_id = c.id WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3 AND c.type = 'expense'`
 	slog.Info("Executing sql", "sql", sqls)
 	var amount int64
 	err := db.Get(&amount, sqls, userId, period.Start, period.End)
