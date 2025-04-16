@@ -3,7 +3,10 @@ package routes
 import (
 	"net/http"
 	"os"
+	"encoding/json"
+	"log/slog"
 
+	"github.com/plaid/plaid-go/v23/plaid"
 	"github.com/jmoiron/sqlx"
 	accountModels "jaxon.app/jaxon/internal/account/models/accounts"
 	assetModels "jaxon.app/jaxon/internal/account/models/assets"
@@ -17,6 +20,8 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /accounts/accounts-tab", getAccountsTab)
 	router.HandleFunc("GET /accounts/assets", getAssetsFullPage)
 	router.HandleFunc("GET /accounts/assets-tab", getAssetsTab)
+	router.HandleFunc("POST /accounts/create-link", createLinkToken)
+	router.HandleFunc("POST /accounts/exchange-token", exchangePublicToken)
 }
 
 func groupAccounts(accounts []accountModels.Account) map[string][]accountModels.Account {
@@ -131,4 +136,72 @@ func getAssetsTab(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accountsTemplates.AssetsTab(assets).Render(r.Context(), w)
+}
+
+type PlaidLinkResponse struct {
+	LinkToken string `json:"link_token"`
+}
+
+func createLinkToken(w http.ResponseWriter, r *http.Request) {
+	plaidClient := r.Context().Value("plaidClient").(*plaid.APIClient)
+	userId := r.Context().Value("userId").(string)
+
+	// Create link token request
+	request := plaid.NewLinkTokenCreateRequest(
+		"Your App Name",
+		"en",
+		[]plaid.CountryCode{plaid.COUNTRYCODE_US},
+		*plaid.NewLinkTokenCreateRequestUser(userId),
+	)
+
+	request.SetProducts([]plaid.Products{plaid.PRODUCTS_TRANSACTIONS, plaid.PRODUCTS_AUTH, plaid.PRODUCTS_ASSETS, plaid.PRODUCTS_BALANCE, plaid.PRODUCTS_INVESTMENTS, plaid.PRODUCTS_LIABILITIES})
+	request.SetLinkCustomizationName("default")
+	request.SetRedirectUri("http://localhost:8080/callback")
+
+	// Create the link token
+	resp, _, err := plaidClient.PlaidApi.LinkTokenCreate(r.Context()).LinkTokenCreateRequest(*request).Execute()
+	if err != nil {
+		slog.Error("Error creating link token: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return the link token
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(PlaidLinkResponse{
+		LinkToken: resp.GetLinkToken(),
+	})
+}
+
+type AccessTokenRequest struct {
+	PublicToken string `json:"public_token"`
+}
+
+type AccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+}
+
+func exchangePublicToken(w http.ResponseWriter, r *http.Request) {
+	plaidClient := r.Context().Value("plaidClient").(*plaid.APIClient)
+
+	var req AccessTokenRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Exchange public token for access token
+	exchangeRequest := plaid.NewItemPublicTokenExchangeRequest(req.PublicToken)
+	exchangeResp, _, err := plaidClient.PlaidApi.ItemPublicTokenExchange(r.Context()).ItemPublicTokenExchangeRequest(*exchangeRequest).Execute()
+	if err != nil {
+		slog.Info("Error exchanging public token: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return the access token
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(AccessTokenResponse{
+		AccessToken: exchangeResp.GetAccessToken(),
+	})
 }

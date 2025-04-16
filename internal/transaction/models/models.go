@@ -168,7 +168,7 @@ func Fetch(id string, db *sqlx.DB) (*Transaction, error) {
 func SumInPeriod(userId string, period *budgets.BudgetPeriod, db *sqlx.DB) (int64, error) {
 	// TODO: need to be able to pickup transactions that are uncategorized
 	sqls := `SELECT COALESCE(SUM(amount), 0) FROM transactions AS t LEFT JOIN categories AS c 
-		ON t.category_id = c.id WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3 AND c.type = 'expense'`
+		ON t.category_id = c.id WHERE t.user_id = $1 AND t.date BETWEEN $2 AND $3 AND (t.category_id IS null OR c.type = 'expense')`
 	slog.Info("Executing sql", "sql", sqls)
 	var amount int64
 	err := db.Get(&amount, sqls, userId, period.Start, period.End)

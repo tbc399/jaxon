@@ -176,7 +176,7 @@ func FetchIncomeBudgetView(id, userId string, db *sqlx.DB) (*BudgetView, error) 
             FROM budgets LEFT JOIN budget_periods ON budgets.period_id = budget_periods.id 
 			LEFT JOIN categories ON budgets.category_id = categories.id
             LEFT JOIN transactions ON budgets.category_id = transactions.category_id 
-			AND (transactions.date BETWEEN start_date AND end_date OR transactions.date is NULL) 
+			AND (transactions.date BETWEEN start_date AND $5 OR transactions.date is NULL) 
             WHERE budgets.id = $1 AND budgets.user_id = $2 AND category_name = 'Income'`
 	slog.Info("Executing sql", "sql", sqls)
 	income := new(BudgetView)

@@ -16,6 +16,7 @@ import (
 	budgetServices "jaxon.app/jaxon/internal/budget/services"
 	dashboard "jaxon.app/jaxon/internal/dashboard/routes"
 	"jaxon.app/jaxon/internal/middleware"
+	"jaxon.app/jaxon/internal/plaid"
 	profile "jaxon.app/jaxon/internal/profile/routes"
 	transactions "jaxon.app/jaxon/internal/transaction/routes"
 )
@@ -63,6 +64,7 @@ func main() {
 	//router.Handle("/transactions/", http.StripPrefix("", transactionRouter))
 
 	ctx, cancel := context.WithCancel(context.Background())
+	ctx = context.WithValue(ctx, "plaidClient", plaid.NewConfiguredPlaidClient())
 	defer cancel()
 
 	var server = http.Server{

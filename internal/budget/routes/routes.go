@@ -26,7 +26,14 @@ func AddRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /budgets/{id}", getBudgetDetailPage)
 	router.HandleFunc("DELETE /budgets/{id}", removeBudget)
 	router.HandleFunc("PUT /budgets/{id}", updateBudget)
+	router.HandleFunc("GET /landing", getLandingPage)
 	//router.HandleFunc("GET /budgets/income/{id}", getIncomeDetailPage)
+}
+
+func getLandingPage(w http.ResponseWriter, r *http.Request) {
+
+	templates.LandingPage().Render(r.Context(), w)
+	//templates.("Budgets", "budgets", budgetPartial).Render(r.Context(), w)
 }
 
 func getBudgets(w http.ResponseWriter, r *http.Request) (*services.BudgetOverview, []budgetmods.BudgetView, error) {
