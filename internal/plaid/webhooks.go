@@ -28,7 +28,8 @@ func Router() *http.ServeMux {
 }
 
 func handlePlaidHooks(w http.ResponseWriter, r *http.Request) {
-	plaidClient := r.Context().Value("plaidClient").(*plaid.APIClient)
+	ctx := r.Context()
+	plaidClient := ctx.Value("plaidClient").(*plaid.APIClient)
 
 	defer r.Body.Close()
 	body, err := io.ReadAll(r.Body)
@@ -37,21 +38,23 @@ func handlePlaidHooks(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	verified := verifySignature(string(body), &r.Header, plaidClient)
+	verified := verifySignature(string(body), &r.Header, plaidClient, &ctx)
 	if !verified {
 		slog.Warn("Signature verification failed for plaid webhook")
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
+	slog.Info(string(body))
+
 	w.WriteHeader(http.StatusOK)
 }
 
-func verifySignature(webhookBody string, headers *http.Header, client *plaid.APIClient) bool {
+func verifySignature(webhookBody string, headers *http.Header, client *plaid.APIClient, ctx *context.Context) bool {
 	// Extract the signed JWT from the webhook header
 	tokenString := headers.Get("plaid-verification")
 
 	// Parse token string, but don't validate token yet
-	token, parts, err := new(jwt.Parser).ParseUnverified(
+	token, _, err := new(jwt.Parser).ParseUnverified(
 		tokenString,
 		jwt.MapClaims{},
 	)
@@ -70,7 +73,7 @@ func verifySignature(webhookBody string, headers *http.Header, client *plaid.API
 	// Fetch key if not already cached
 	if cachedKey == nil {
 		webhookRequest := *plaid.NewWebhookVerificationKeyGetRequest(kid)
-		webhookResponse, _, respErr := client.PlaidApi.WebhookVerificationKeyGet(ctx).WebhookVerificationKeyGetRequest(webhookRequest).Execute()
+		webhookResponse, _, respErr := client.PlaidApi.WebhookVerificationKeyGet(*ctx).WebhookVerificationKeyGetRequest(webhookRequest).Execute()
 
 		if respErr != nil {
 			fmt.Println(respErr)
@@ -78,7 +81,8 @@ func verifySignature(webhookBody string, headers *http.Header, client *plaid.API
 		}
 
 		// Cache the key
-		cachedKey = webhookResponse.GetKey()
+		key := webhookResponse.GetKey()
+		cachedKey = &key
 	}
 
 	// If key is still not set, verification fails
@@ -130,9 +134,13 @@ func verifySignature(webhookBody string, headers *http.Header, client *plaid.API
 
 	// Verify request_body_sha256 claim matches the webhook body
 	if bodyHash, ok := claims["request_body_sha256"].(string); ok {
-		// You would need to implement SHA256 hashing of the webhook body here
-		// and compare it with bodyHash
-		_ = bodyHash // Placeholder - implement actual body hash verification
+		hasher := sha256.New()
+		hasher.Write([]byte(webhookBody))
+		calculatedhash := hex.EncodeToString(hasher.Sum(nil))
+
+		if bodyHash != calculatedhash {
+			return false
+		}
 	} else {
 		return false
 	}
