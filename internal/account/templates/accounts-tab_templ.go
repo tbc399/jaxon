@@ -31,7 +31,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- List of accounts --><div id=\"accounts-tab-list\" class=\"pt-6 pb-2 items-center gap-y-3 gap-x-3\" hx-get=\"/accounts/accounts-tab\" hx-trigger=\"accountsLinked\" hx-swap=\"outerHTML\"><div class=\"flex justify-end mb-4 pe-2\"><button id=\"add-account-button\" type=\"button\" title=\"Connect new account\" class=\"py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md\n                      text-gray-100 bg-teal-900 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 \n                      disabled:pointer-events-none\"><svg viewBox=\"0 0 24 24\" class=\"size-3.5 fill-none stroke-[2.5px] stroke-gray-100\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\"></path></svg> Add account</button><script>\n              htmx.on(\"#add-account-button\", \"click\",\n                async function(evt) {\n                  fetch(\"/accounts/connect\")\n                    .then(async function(response) {\n                      return response.json();\n                    }).then(async function(json) {\n                      const key = \n                      const stripe = new Stripe(\"{ stripePubKey }\");\n                      const sessionResult = await stripe.collectFinancialConnectionsAccounts({\n                        clientSecret: json[\"client_secret\"]\n                      }).then(async function(result) {\n                        if (result.error) {\n                          // Inform the customer that there was an error.\n                          console.log(result.error.message);\n                        // Handle next step based on length of accounts array\n                        } else if (result.financialConnectionsSession.accounts.length === 0) {\n                          console.log('No accounts were linked');\n                        } else {\n                          //console.log(result.financialConnectionsSession.accounts)\n                          event = new CustomEvent(\"accountsLinked\")\n                          e = document.getElementById(\"accounts-tab-list\")\n                          e.dispatchEvent(event)\n                        }\n                      });\n                    });\n                }\n              );\n            </script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- List of accounts --><div id=\"accounts-tab-list\" class=\"pt-6 pb-2 items-center gap-y-3 gap-x-3\" hx-get=\"/accounts/accounts-tab\" hx-trigger=\"accountsLinked\" hx-swap=\"outerHTML\"><div class=\"flex justify-end mb-4 pe-2\"><button id=\"add-account-button\" type=\"button\" title=\"Connect new account\" class=\"py-1.5 ps-2.5 pe-3.5 inline-flex items-center gap-x-1 text-sm font-semibold rounded-md\n                      text-gray-100 bg-teal-900 active:bg-teal-600 hover:bg-teal-700 disabled:opacity-50 \n                      disabled:pointer-events-none\"><svg viewBox=\"0 0 24 24\" class=\"size-3.5 fill-none stroke-[2.5px] stroke-gray-100\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\"></path></svg> Add account</button><script>\n              document.getElementById('add-account-button').addEventListener('click',\n                async function(evt) {\n                    // Create a Link token\n                    fetch('/accounts/create-link', {\n                        method: 'POST',\n                        headers: {\n                            'Content-Type': 'application/json'\n                        }\n                    })\n                    .then(response => response.json())\n                    .then(data => {\n                        // Initialize Plaid Link\n                        const handler = Plaid.create({\n                            token: data.link_token,\n                            onSuccess: (public_token, metadata) => {\n                                // Exchange public token for access token\n                                fetch('/accounts/exchange-token', {\n                                    method: 'POST',\n                                    headers: {\n                                        'Content-Type': 'application/json'\n                                    },\n                                    body: JSON.stringify({ public_token: public_token })\n                                })\n                                .catch(error => console.error('Error exchanging public token:', error));\n                            },\n                            onExit: (err, metadata) => {\n                                if (err != null) {\n                                    console.error('Link error:', err);\n                                }\n                            }\n                        });\n                        \n                        // Open Link\n                        handler.open();\n                    })\n                    .catch(error => console.error('Error creating link token:', error));\n                }\n              );\n            </script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,7 +44,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(acctType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 61, Col: 79}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 72, Col: 79}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -62,7 +62,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 					var templ_7745c5c3_Var3 string
 					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(account.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 68, Col: 58}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 79, Col: 58}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 					if templ_7745c5c3_Err != nil {
@@ -75,7 +75,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(account.Last4)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 69, Col: 77}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 80, Col: 77}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(account.LastSyncDisplay())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 72, Col: 96}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 83, Col: 96}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
@@ -101,7 +101,7 @@ func AccountsTab(accounts map[string][]accountModels.Account, stripePubKey strin
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(account.InstitutionName)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 99, Col: 82}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/account/templates/accounts-tab.templ`, Line: 110, Col: 82}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {

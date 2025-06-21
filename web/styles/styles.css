@@ -1950,10 +1950,6 @@ select {
   padding-bottom: 1.5rem;
 }
 
-.pb-1 {
-  padding-bottom: 0.25rem;
-}
-
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -2492,15 +2488,57 @@ select {
   inset: 0px;
 }
 
+.before\:me-6::before {
+  content: var(--tw-content);
+  margin-inline-end: 1.5rem;
+}
+
 .before\:size-full::before {
   content: var(--tw-content);
   width: 100%;
   height: 100%;
 }
 
+.before\:flex-1::before {
+  content: var(--tw-content);
+  flex: 1 1 0%;
+}
+
 .before\:rounded-lg::before {
   content: var(--tw-content);
   border-radius: 0.5rem;
+}
+
+.before\:border-t::before {
+  content: var(--tw-content);
+  border-top-width: 1px;
+}
+
+.before\:border-gray-200::before {
+  content: var(--tw-content);
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.after\:ms-6::after {
+  content: var(--tw-content);
+  margin-inline-start: 1.5rem;
+}
+
+.after\:flex-1::after {
+  content: var(--tw-content);
+  flex: 1 1 0%;
+}
+
+.after\:border-t::after {
+  content: var(--tw-content);
+  border-top-width: 1px;
+}
+
+.after\:border-gray-200::after {
+  content: var(--tw-content);
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 
 .first\:pt-0:first-child {
@@ -3232,6 +3270,18 @@ select {
 
   .dark\:ring-slate-700\/50 {
     --tw-ring-color: rgb(51 65 85 / 0.5);
+  }
+
+  .dark\:before\:border-gray-600::before {
+    content: var(--tw-content);
+    --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity));
+  }
+
+  .dark\:after\:border-gray-600::after {
+    content: var(--tw-content);
+    --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity));
   }
 
   .dark\:checked\:before\:bg-neutral-800:checked::before {

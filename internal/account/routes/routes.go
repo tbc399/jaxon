@@ -1,17 +1,19 @@
 package routes
 
 import (
-	"net/http"
-	"os"
 	"encoding/json"
 	"log/slog"
+	"net/http"
+	"os"
 
-	"github.com/plaid/plaid-go/v23/plaid"
 	"github.com/jmoiron/sqlx"
+	"github.com/plaid/plaid-go/v37/plaid"
 	accountModels "jaxon.app/jaxon/internal/account/models/accounts"
 	assetModels "jaxon.app/jaxon/internal/account/models/assets"
 	accountsTemplates "jaxon.app/jaxon/internal/account/templates"
+	plaidModels "jaxon.app/jaxon/internal/plaid/models"
 	"jaxon.app/jaxon/internal/templates"
+	// plaidModels "jaxon.app/jaxon/internal/plaid/models"
 )
 
 func AddRoutes(router *http.ServeMux) {
@@ -148,20 +150,21 @@ func createLinkToken(w http.ResponseWriter, r *http.Request) {
 
 	// Create link token request
 	request := plaid.NewLinkTokenCreateRequest(
-		"Your App Name",
+		"jaxon",
 		"en",
 		[]plaid.CountryCode{plaid.COUNTRYCODE_US},
 		*plaid.NewLinkTokenCreateRequestUser(userId),
 	)
 
-	request.SetProducts([]plaid.Products{plaid.PRODUCTS_TRANSACTIONS, plaid.PRODUCTS_AUTH, plaid.PRODUCTS_ASSETS, plaid.PRODUCTS_BALANCE, plaid.PRODUCTS_INVESTMENTS, plaid.PRODUCTS_LIABILITIES})
+	request.SetProducts([]plaid.Products{plaid.PRODUCTS_AUTH})
+	request.SetOptionalProducts([]plaid.Products{plaid.PRODUCTS_TRANSACTIONS, plaid.PRODUCTS_INVESTMENTS, plaid.PRODUCTS_LIABILITIES})
 	request.SetLinkCustomizationName("default")
-	request.SetRedirectUri("http://localhost:8080/callback")
+	// request.SetWebhook()
 
 	// Create the link token
 	resp, _, err := plaidClient.PlaidApi.LinkTokenCreate(r.Context()).LinkTokenCreateRequest(*request).Execute()
 	if err != nil {
-		slog.Error("Error creating link token: %v", err)
+		slog.Error("Error creating plaid link", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -183,6 +186,8 @@ type AccessTokenResponse struct {
 
 func exchangePublicToken(w http.ResponseWriter, r *http.Request) {
 	plaidClient := r.Context().Value("plaidClient").(*plaid.APIClient)
+	db := r.Context().Value("db").(*sqlx.DB)
+	userId := r.Context().Value("userId").(string)
 
 	var req AccessTokenRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -194,14 +199,45 @@ func exchangePublicToken(w http.ResponseWriter, r *http.Request) {
 	exchangeRequest := plaid.NewItemPublicTokenExchangeRequest(req.PublicToken)
 	exchangeResp, _, err := plaidClient.PlaidApi.ItemPublicTokenExchange(r.Context()).ItemPublicTokenExchangeRequest(*exchangeRequest).Execute()
 	if err != nil {
-		slog.Info("Error exchanging public token: %v", err)
+		slog.Info("Error exchanging public token", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Return the access token
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AccessTokenResponse{
-		AccessToken: exchangeResp.GetAccessToken(),
-	})
+	// TODO: do not return the access token to the browser
+	accessToken := exchangeResp.GetAccessToken()
+
+	slog.Info("Successfully received access token for account link")
+
+	// TODO: need to eventually do this in the background
+
+	accountsRequest := plaid.NewAccountsGetRequest(accessToken)
+	resp, _, err := plaidClient.PlaidApi.AccountsGet(r.Context()).AccountsGetRequest(*accountsRequest).Execute()
+
+	slog.Info("", "account_response", resp.GetAccounts()[0])
+
+	item := plaidModels.NewItem(userId, accessToken, *resp.GetItem().InstitutionId.Get(), resp.GetItem().ItemId)
+	err = item.Save(db)
+	if err != nil {
+		slog.Error("Failed to save new Plaid item")
+	}
+
+	for _, acct := range resp.GetAccounts() {
+		slog.Info("Creating new account")
+		account := accountModels.NewAccount(
+			acct.GetName(),
+			string(acct.GetType()),
+			string(acct.GetSubtype()),
+			userId,
+			*resp.GetItem().InstitutionName.Get(),
+			acct.GetMask(),
+			item.Id,
+		)
+		err = account.Save(db)
+		if err != nil {
+			slog.Error("Failed to save account")
+		}
+	}
+
+	w.WriteHeader(http.StatusCreated)
 }

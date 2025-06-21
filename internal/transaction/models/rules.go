@@ -1,6 +1,6 @@
 package models
 
 type TransactionRule struct {
-	Id string
+	Id            string
 	TransactionId string
 }

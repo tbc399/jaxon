@@ -22,7 +22,7 @@ templ BudgetDetail(budgetView *budgets.BudgetView, transactions []models.Transac
             </div>
         </div>
         <div class="flex flex-row justify-start mb-4 w-full py-2">
-            <h1 class="font-medium text-xl dark:text-white">budgetView.CategoryName</h1>
+            <h1 class="font-medium text-xl dark:text-white">{ budgetView.CategoryName }</h1>
         </div>
         <div class="w-full p-1.5 rounded-2xl dark:bg-gray-800/50 ring-1 dark:ring-slate-700/50">
             <form hx-put={ string(templ.URL(fmt.Sprintf("/budgets/%s", budgetView.Id))) } hx-swap="none" class="w-full rounded-xl dark:bg-gray-900">

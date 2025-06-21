@@ -42,7 +42,7 @@ func Header(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"/static/styles/styles.css\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"https://rsms.me/inter/inter.css\"><script src=\"/static/scripts/htmx.min.js\"></script><script src=\"/static/scripts/_hyperscript.min.js\"></script><script src=\"/modules/preline/dist/preline.js\"></script><script src=\"https://js.stripe.com/v3/\"></script></head>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"/static/styles/styles.css\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"https://rsms.me/inter/inter.css\"><script src=\"/static/scripts/htmx.min.js\"></script><script src=\"/static/scripts/_hyperscript.min.js\"></script><script src=\"/modules/preline/dist/preline.js\"></script><script src=\"https://cdn.plaid.com/link/v2/stable/link-initialize.js\"></script></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

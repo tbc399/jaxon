@@ -26,31 +26,42 @@ templ AccountsTab(accounts map[string][]accountModels.Account, stripePubKey stri
 				Add account
 			</button>
 			<script>
-              htmx.on("#add-account-button", "click",
+              document.getElementById('add-account-button').addEventListener('click',
                 async function(evt) {
-                  fetch("/accounts/connect")
-                    .then(async function(response) {
-                      return response.json();
-                    }).then(async function(json) {
-                      const key = 
-                      const stripe = new Stripe("{ stripePubKey }");
-                      const sessionResult = await stripe.collectFinancialConnectionsAccounts({
-                        clientSecret: json["client_secret"]
-                      }).then(async function(result) {
-                        if (result.error) {
-                          // Inform the customer that there was an error.
-                          console.log(result.error.message);
-                        // Handle next step based on length of accounts array
-                        } else if (result.financialConnectionsSession.accounts.length === 0) {
-                          console.log('No accounts were linked');
-                        } else {
-                          //console.log(result.financialConnectionsSession.accounts)
-                          event = new CustomEvent("accountsLinked")
-                          e = document.getElementById("accounts-tab-list")
-                          e.dispatchEvent(event)
+                    // Create a Link token
+                    fetch('/accounts/create-link', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
                         }
-                      });
-                    });
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Initialize Plaid Link
+                        const handler = Plaid.create({
+                            token: data.link_token,
+                            onSuccess: (public_token, metadata) => {
+                                // Exchange public token for access token
+                                fetch('/accounts/exchange-token', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ public_token: public_token })
+                                })
+                                .catch(error => console.error('Error exchanging public token:', error));
+                            },
+                            onExit: (err, metadata) => {
+                                if (err != null) {
+                                    console.error('Link error:', err);
+                                }
+                            }
+                        });
+                        
+                        // Open Link
+                        handler.open();
+                    })
+                    .catch(error => console.error('Error creating link token:', error));
                 }
               );
             </script>

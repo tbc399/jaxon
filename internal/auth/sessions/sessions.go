@@ -29,7 +29,7 @@ func New(userId string, otpId string) *Session {
 	now := time.Now().UTC()
 	return &Session{
 		Id:          shortuuid.New(),
-		Expiry:      now.Add(time.Duration(10) * time.Hour * 24),
+		Expiry:      now.Add(time.Duration(30) * time.Hour * 24), // 30 days
 		OtpId:       otpId,
 		UserId:      userId,
 		Invalidated: false,

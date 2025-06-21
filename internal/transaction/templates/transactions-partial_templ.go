@@ -43,14 +43,14 @@ func transactionsPartial(transactions []interface{}) templ.Component {
 		}
 		for _, transaction := range transactions {
 			if isDate(transaction) {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex justify-center text-sm text-gray-500 font-medium ps-2 pt-5 pb-1\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"py-3 flex flex-row items-center text-sm font-medium text-gray-500 before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:before:border-gray-600 dark:after:border-gray-600\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(transaction.(time.Time).Format("January 02, 2006"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-partial.templ`, Line: 19, Col: 60}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/transaction/templates/transactions-partial.templ`, Line: 18, Col: 356}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {

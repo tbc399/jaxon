@@ -43,7 +43,7 @@ func (self *Budget) Save(db *sqlx.DB) error {
 	modelType := reflect.TypeOf(Budget{})
 
 	columnNames := []string{}
-	for i := 0; i < modelType.NumField(); i++ {
+	for i := range modelType.NumField() {
 		field := modelType.Field(i)
 		tag, ok := field.Tag.Lookup("db")
 		if ok {
@@ -154,8 +154,8 @@ func FetchBudgetView(id, userId string, db *sqlx.DB) (*BudgetView, error) {
 	sqls := `SELECT budgets.id, budgets.user_id, budgets.category_id, budgets.amount,
             categories.name as category_name, SUM(COALESCE(transactions.amount, 0)) as transactions_total
             FROM budgets LEFT JOIN budget_periods ON budgets.period_id = budget_periods.id LEFT JOIN categories ON budgets.category_id = categories.id
-            LEFT JOIN transactions ON budgets.category_id = transactions.category_id AND (transactions.date BETWEEN $4 AND $5 OR transactions.date is NULL) 
-            WHERE budgets.id = $1 AND budgets.user_id = $2`
+            LEFT JOIN transactions ON budgets.category_id = transactions.category_id AND (transactions.date BETWEEN budget_periods.start AND budget_periods.end OR transactions.date is NULL) 
+            WHERE budgets.id = $1 AND budgets.user_id = $2 GROUP BY budgets.id, categories.name`
 	slog.Info("Executing sql", "sql", sqls)
 	budget := new(BudgetView)
 	err := db.Get(budget, sqls, id, userId)
@@ -336,5 +336,3 @@ func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 	}
 	return rollovers, nil
 }
-
-

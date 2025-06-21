@@ -155,9 +155,9 @@ func CreateDefaultCategories(userId string) {
 
 type BudgetOverview struct {
 	ExpectedIncome int64
-	CurrentIncome int64
-	ExpectedSpend int64
-	CurrentSpend int64
+	CurrentIncome  int64
+	ExpectedSpend  int64
+	CurrentSpend   int64
 }
 
 func GetBudgetOverview(userId string, period *budgets.BudgetPeriod, db *sqlx.DB) (*BudgetOverview, error) {
@@ -175,11 +175,11 @@ func GetBudgetOverview(userId string, period *budgets.BudgetPeriod, db *sqlx.DB)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &BudgetOverview{
 		ExpectedIncome: expecedIncome,
-		CurrentIncome: currentIncome,
-		ExpectedSpend: expectedSpend,
-		CurrentSpend: currentSpend,
+		CurrentIncome:  currentIncome,
+		ExpectedSpend:  expectedSpend,
+		CurrentSpend:   currentSpend,
 	}, nil
 }

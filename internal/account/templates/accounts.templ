@@ -44,6 +44,7 @@ templ Accounts(accountsTabSection templ.Component, activeTab string) {
 					Assets
 				</button>
 			</div>
+            /*
 			<button
 				id="add-account-button"
 				type="button"
@@ -57,7 +58,8 @@ templ Accounts(accountsTabSection templ.Component, activeTab string) {
 				</svg>
 				Add account
 			</button>
-			/*
+            */
+            /*
             <script>
               htmx.on("#add-account-button", "click",
                 async function(evt) {
@@ -87,40 +89,46 @@ templ Accounts(accountsTabSection templ.Component, activeTab string) {
               );
             </script>
             */
+            /*
             <script>
                 // Initialize Plaid Link
+                //htmx.on("#add-account-button", "click",
                 document.addEventListener('DOMContentLoaded', function() {
-                    document.getElementById('plaid-connect-button').addEventListener('click', function() {
-                        // Create a Link token
-                        fetch('/api/create_link_token', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            // Initialize Plaid Link
-                            const handler = Plaid.create({
-                                token: data.link_token,
-                                onSuccess: (public_token, metadata) => {
-                                    // Exchange public token for access token
-                                    exchangePublicToken(public_token);
-                                },
-                                onExit: (err, metadata) => {
-                                    if (err != null) {
-                                        console.error('Link error:', err);
-                                    }
+                    document.getElementById('add-account-button').addEventListener('click',
+                        async function(evt) {
+                            // Create a Link token
+                            fetch('/account/create-link', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
                                 }
-                            });
-                            
-                            // Open Link
-                            handler.open();
-                        })
-                        .catch(error => console.error('Error creating link token:', error));
-                    });
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Initialize Plaid Link
+                                const handler = Plaid.create({
+                                    token: data.link_token,
+                                    onSuccess: (public_token, metadata) => {
+                                        // Exchange public token for access token
+                                        exchangePublicToken(public_token);
+                                    },
+                                    onExit: (err, metadata) => {
+                                        if (err != null) {
+                                            console.error('Link error:', err);
+                                        }
+                                    }
+                                });
+                                
+                                // Open Link
+                                handler.open();
+                            })
+                            .catch(error => console.error('Error creating link token:', error));
+                        }
+                    );
                 });
+                console.log(htmx.find("#add-account-button"));
             </script>
+            */
 		</div>
 		@accountsTabSection
 	</div>
