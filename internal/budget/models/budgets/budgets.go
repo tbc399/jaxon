@@ -323,7 +323,7 @@ func (self *BudgetPeriod) SumBudgets(userId string, db *sqlx.DB) (int64, error) 
 
 func FetchLatestPeriods(db *sqlx.DB) ([]BudgetPeriod, error) {
 	sqls := `SELECT DISTINCT ON (bp.user_id) bp.* FROM budget_periods AS bp LEFT JOIN users AS u ON bp.user_id = u.id WHERE u.active = true ORDER BY bp.user_id, bp.end DESC`
-	slog.Info("Executing sql", "sql", sqls)
+	slog.Debug("Executing sql", "sql", sqls)
 	rollovers := []BudgetPeriod{}
 	err := db.Select(&rollovers, sqls)
 	if err != nil {

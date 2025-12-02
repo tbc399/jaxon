@@ -13,23 +13,6 @@ import (
 	"github.com/lithammer/shortuuid/v4"
 )
 
-const (
-	AccountTypeCash       = "cash"
-	AccountTypeCredit     = "credit"
-	AccountTypeInvestment = "investment"
-	AccountTypeOther      = "other"
-	AccountTypeManual     = "manual"
-)
-
-const (
-	AccountSubTypeChecking     = "checking"
-	AccountSubTypeSavings      = "savings"
-	AccountSubTypeCreditCard   = "credit_card"
-	AccountSubTypeLineOfCredit = "line_of_credit"
-	AccountSubTypeMortgage     = "mortgage"
-	AccountSubTypeOther        = "other"
-)
-
 type Account struct {
 	Id              string
 	Name            string

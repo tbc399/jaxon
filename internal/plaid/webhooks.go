@@ -27,6 +27,13 @@ func Router() *http.ServeMux {
 	return router
 }
 
+//var eventMap = map[plaid.WebhookType]string  {
+//	plaid.
+//}
+
+func handleEvent() {
+}
+
 func handlePlaidHooks(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	plaidClient := ctx.Value("plaidClient").(*plaid.APIClient)
@@ -44,12 +51,16 @@ func handlePlaidHooks(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	slog.Info(string(body))
+	slog.Debug("Received Plaid event", "event", string(body))
+
+	// handleEvent(string)
 
 	w.WriteHeader(http.StatusOK)
 }
 
-func verifySignature(webhookBody string, headers *http.Header, client *plaid.APIClient, ctx *context.Context) bool {
+func verifySignature(webhookBody string, headers *http.Header, client *plaid.APIClient,
+	ctx *context.Context,
+) bool {
 	// Extract the signed JWT from the webhook header
 	tokenString := headers.Get("plaid-verification")
 
@@ -73,7 +84,9 @@ func verifySignature(webhookBody string, headers *http.Header, client *plaid.API
 	// Fetch key if not already cached
 	if cachedKey == nil {
 		webhookRequest := *plaid.NewWebhookVerificationKeyGetRequest(kid)
-		webhookResponse, _, respErr := client.PlaidApi.WebhookVerificationKeyGet(*ctx).WebhookVerificationKeyGetRequest(webhookRequest).Execute()
+		webhookResponse, _, respErr := client.PlaidApi.WebhookVerificationKeyGet(
+			*ctx,
+		).WebhookVerificationKeyGetRequest(webhookRequest).Execute()
 
 		if respErr != nil {
 			fmt.Println(respErr)

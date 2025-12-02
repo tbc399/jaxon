@@ -158,6 +158,8 @@ func createLinkToken(w http.ResponseWriter, r *http.Request) {
 
 	request.SetProducts([]plaid.Products{plaid.PRODUCTS_AUTH})
 	request.SetOptionalProducts([]plaid.Products{plaid.PRODUCTS_TRANSACTIONS, plaid.PRODUCTS_INVESTMENTS, plaid.PRODUCTS_LIABILITIES})
+	slog.Info(os.Getenv("PLAID_WEBHOOK_HANDLER_URL"))
+	request.SetWebhook(os.Getenv("PLAID_WEBHOOK_HANDLER_URL"))
 	request.SetLinkCustomizationName("default")
 	// request.SetWebhook()
 

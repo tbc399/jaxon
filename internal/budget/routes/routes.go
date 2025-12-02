@@ -46,6 +46,7 @@ func getBudgets(w http.ResponseWriter, r *http.Request) (*services.BudgetOvervie
 	}
 
 	period, err := budgetmods.FetchCurrentPeriod(userId, db)
+	slog.Info("period", period)
 	if err != nil {
 		return nil, nil, errors.New("Failed to get current period")
 	}
