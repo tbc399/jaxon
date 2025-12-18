@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/csv"
+	//	"fmt"
 	"io"
 	"log/slog"
 	"sort"
@@ -86,10 +87,6 @@ func GroupTransactionsByDate(transactions []models.TransactionView) []interface{
 		return transactions[lhs].Date.After(transactions[rhs].Date)
 	})
 	groups := make([]interface{}, 0)
-
-	if len(groups) == 0 {
-		return groups
-	}
 
 	t := transactions[0].Date
 	currentDate := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())

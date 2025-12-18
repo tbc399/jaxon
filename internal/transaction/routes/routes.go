@@ -2,6 +2,7 @@ package routes
 
 import (
 	"database/sql"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -28,9 +29,14 @@ func getTransactionsFullPage(w http.ResponseWriter, r *http.Request) {
 	db := r.Context().Value("db").(*sqlx.DB)
 	userId := r.Context().Value("userId").(string)
 
+	slog.Info(userId)
 	transactions, err := models.FetchMany(userId, db)
 
+	slog.Info(fmt.Sprintf("%d", len(transactions)))
+
 	groupedTransactions := services.GroupTransactionsByDate(transactions)
+
+	slog.Info(fmt.Sprintf("%d", len(groupedTransactions)))
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

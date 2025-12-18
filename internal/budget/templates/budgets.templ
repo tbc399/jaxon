@@ -54,7 +54,8 @@ templ Budgets(overview *services.BudgetOverview, budgets []budgets.BudgetView, a
                                         hx-swap="none"
                                     >Income</span>
                                 </div>
-                                <div class="dark:text-gray-400 text-sm font-medium hover:text-emerald-400 hover:underline underline-offset-2 hover:cursor-pointer">
+                                <div class="dark:text-gray-400 text-sm font-medium hover:text-emerald-400 hover:underline underline-offset-2 hover:cursor-pointer"
+                                hx-get="/budgets/income-edit">
                                     edit
                                 </div>
                             </div>

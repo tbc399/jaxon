@@ -1,5 +1,7 @@
 default: run build format
 
+set shell := ["zsh", "-c"]
+
 run:
 	source setenv.sh && air 
 
